@@ -5,10 +5,17 @@ import Link from "next/link";
 import PrivateHighlight from "@/components/PrivateHighlight";
 import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
-import { typeLabelsKo, paperEmoji, paperGradients, paperImages, paperDividers } from "@/lib/typeLabels";
+import {
+  typeLabelsKo,
+  paperEmoji,
+  paperImages,
+  paperDividers,
+} from "@/lib/typeLabels";
 
 function isHeadingPattern(text: string): boolean {
-  return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(text);
+  return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(
+    text
+  );
 }
 
 function isPriorityHeading(text: string): boolean {
@@ -46,6 +53,7 @@ function renderLetterBlock(block: Block) {
   if (block.text.startsWith("안녕")) {
     return (
       <p className="font-serif text-lg sm:text-xl leading-[1.75] text-on-surface font-bold">
+        <span className="text-primary mr-1">💕</span>
         {block.text}
       </p>
     );
@@ -75,8 +83,9 @@ function renderChecklistBlock(block: Block) {
   if (isHeadingPattern(block.text)) {
     return (
       <div className="border-l-4 border-tertiary/40 pl-4 py-2 bg-tertiary-container/10 rounded-r-xl">
-        <p className="font-headline font-bold text-base sm:text-lg text-primary">
-          {block.text}
+        <p className="font-headline font-bold text-base sm:text-lg text-primary flex items-start gap-2">
+          <span className="shrink-0">✿</span>
+          <span>{block.text}</span>
         </p>
       </div>
     );
@@ -95,7 +104,7 @@ function renderImaginationBlock(block: Block) {
     return (
       <div className="pt-6">
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="text-3xl">{isPast ? "🔍" : "🔮"}</span>
+          <span className="text-3xl">{isPast ? "🔍" : "🪐"}</span>
         </div>
         <div className="flex items-center gap-3 mb-2">
           <div className="flex-1 h-px bg-outline-variant/30" />
@@ -135,10 +144,14 @@ function renderPrioritiesBlock(block: Block) {
       return (
         <div className="flex items-start gap-4 py-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-200 to-yellow-100 flex items-center justify-center shrink-0 shadow-md">
-            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">{match[1]}</span>
+            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">
+              {match[1]}
+            </span>
           </div>
           <div className="pt-1">
-            <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">{match[2]}</p>
+            <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">
+              {match[2]}
+            </p>
           </div>
         </div>
       );
@@ -168,21 +181,33 @@ function renderGoalsBlock(block: Block, prevBlock?: Block) {
   }
   if (isGoalHeading(block.text)) {
     const category = getGoalCategory(block.text);
-    const categoryEmoji: Record<string, string> = { "창업": "🚀", "정치": "🏛️", "가족": "👨‍👩‍👧" };
-    const needsCategoryLabel = !prevBlock || getGoalCategory(prevBlock.text) !== category;
-    const goalText = block.text.replace(/^(창업|정치|가족) 목표 \d+:\s*/, "");
+    const categoryEmoji: Record<string, string> = {
+      창업: "💡",
+      정치: "🏛️",
+      가족: "👨‍👩‍👧",
+    };
+    const needsCategoryLabel =
+      !prevBlock || getGoalCategory(prevBlock.text) !== category;
+    const goalText = block.text.replace(
+      /^(창업|정치|가족) 목표 \d+:\s*/,
+      ""
+    );
     const goalNum = block.text.match(/목표 (\d+)/)?.[1];
     return (
       <>
         {needsCategoryLabel && category && (
           <div className="mt-4 mb-2 flex items-center gap-2">
-            <span className="text-xl">{categoryEmoji[category] || "📌"}</span>
-            <span className="font-headline font-bold text-base text-primary">{category}</span>
+            <span className="text-xl">
+              {categoryEmoji[category] || "📌"}
+            </span>
+            <span className="font-headline font-bold text-base text-primary">
+              {category}
+            </span>
             <div className="flex-1 h-px bg-outline-variant/20" />
           </div>
         )}
         <div className="flex items-start gap-3 py-1.5 pl-2">
-          <span className="text-sm mt-0.5">☐</span>
+          <span className="text-sm mt-0.5 text-primary/60">✿</span>
           <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
             <span className="text-xs text-outline mr-1">목표{goalNum}</span>
             {goalText}
@@ -220,12 +245,16 @@ function renderStepsBlock(block: Block) {
         <div className="flex items-start gap-4 py-3">
           <div className="flex flex-col items-center">
             <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-orange-300 to-amber-100 flex items-center justify-center shadow-md border-2 border-white">
-              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">{match[1]}</span>
+              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">
+                {match[1]}
+              </span>
             </div>
             <div className="w-0.5 h-4 bg-orange-200 mt-1" />
           </div>
           <div className="pt-1.5">
-            <p className="font-headline font-bold text-base sm:text-lg text-on-surface">{match[2]}</p>
+            <p className="font-headline font-bold text-base sm:text-lg text-on-surface">
+              {match[2]}
+            </p>
           </div>
         </div>
       );
@@ -238,7 +267,12 @@ function renderStepsBlock(block: Block) {
   );
 }
 
-function renderBlockByType(type: string, block: Block, allBlocks: Block[], blockIdx: number) {
+function renderBlockByType(
+  type: string,
+  block: Block,
+  allBlocks: Block[],
+  blockIdx: number
+) {
   switch (type) {
     case "letter":
       return renderLetterBlock(block);
@@ -249,8 +283,8 @@ function renderBlockByType(type: string, block: Block, allBlocks: Block[], block
     case "priorities":
       return renderPrioritiesBlock(block);
     case "goals": {
-      const prevVisible = allBlocks.slice(0, blockIdx).pop();
-      return renderGoalsBlock(block, prevVisible);
+      const prevBlock = allBlocks.slice(0, blockIdx).pop();
+      return renderGoalsBlock(block, prevBlock);
     }
     case "steps":
       return renderStepsBlock(block);
@@ -277,27 +311,16 @@ export default function VaultReaderClient({
           animate={{ opacity: 1, y: 0 }}
           className="relative mb-8 sm:mb-12"
         >
-          {/* Washi tape label */}
-          <div className="absolute -top-3 -left-2 sm:-left-4 z-10">
-            <div className="bg-secondary-container text-on-secondary-container px-4 sm:px-6 py-1.5 font-bold text-xs shadow-sm -rotate-3 rounded-sm">
-              전체 공개 ✨
-            </div>
+          {/* Hero image - clean, no overlays */}
+          <div className="relative w-full aspect-[16/10] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+            <img
+              src={paperImages[paper.id]}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </div>
 
-          {/* Hero image with gradient overlay and emoji */}
-          <div className="relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
-            <img src={paperImages[paper.id]} alt="" className="absolute inset-0 w-full h-full object-cover" />
-            <div className={`absolute inset-0 bg-gradient-to-br ${paperGradients[paper.id]} opacity-50`} />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-6xl sm:text-8xl drop-shadow-lg">{paperEmoji[paper.id]}</span>
-            </div>
-            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5">
-              <span className="text-sm">👁️</span>
-              <span className="text-sm font-bold text-tertiary">전체 공개</span>
-            </div>
-          </div>
-
-          {/* Badge & Title */}
+          {/* Title */}
           <div className="text-center space-y-3">
             <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
               {paper.subtitle}
@@ -306,7 +329,9 @@ export default function VaultReaderClient({
               {paper.title}
             </h1>
             {paper.timeline && (
-              <p className="text-sm text-outline italic font-body">{paper.timeline}</p>
+              <p className="text-sm text-outline italic font-body">
+                {paper.timeline}
+              </p>
             )}
           </div>
         </motion.section>
@@ -338,8 +363,12 @@ export default function VaultReaderClient({
               {paperEmoji[paper.id]}
             </div>
             <div>
-              <p className="text-[10px] font-bold tracking-wider text-primary/60">타입</p>
-              <p className="text-sm font-bold text-on-surface-variant">{typeLabelsKo[paper.type]}</p>
+              <p className="text-[10px] font-bold tracking-wider text-primary/60">
+                타입
+              </p>
+              <p className="text-sm font-bold text-on-surface-variant">
+                {typeLabelsKo[paper.type]}
+              </p>
             </div>
             <div className="ml-auto flex items-center gap-1 text-xs text-tertiary font-bold bg-tertiary-container/30 px-3 py-1 rounded-full">
               <span>🔓</span>
@@ -353,68 +382,81 @@ export default function VaultReaderClient({
                 key={block.id}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.05, type: "spring", damping: 25 }}
+                transition={{
+                  delay: 0.1 + i * 0.05,
+                  type: "spring",
+                  damping: 25,
+                }}
               >
                 {block.isPrivate ? (
                   <PrivateHighlight>
-                    {renderBlockByType(paper.type, block, paper.blocks, i)}
+                    {renderBlockByType(
+                      paper.type,
+                      block,
+                      paper.blocks,
+                      i
+                    )}
                   </PrivateHighlight>
                 ) : (
                   renderBlockByType(paper.type, block, paper.blocks, i)
                 )}
               </motion.div>
             ))}
-          </div>
 
+            {/* Letter date at end */}
+            {paper.type === "letter" && paper.timeline && (
+              <p className="text-right text-sm text-outline italic font-serif mt-8">
+                {paper.timeline.split("→")[0].trim()}
+              </p>
+            )}
+          </div>
         </motion.article>
 
         {/* Emoji divider */}
         <div className="flex items-center justify-center gap-4 py-8">
-          <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[0]}</span>
+          <span className="text-2xl opacity-40">
+            {(paperDividers[paper.id] || ["·", "·", "·"])[0]}
+          </span>
           <div className="h-px w-16 bg-outline-variant/30" />
-          <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[1]}</span>
+          <span className="text-2xl opacity-40">
+            {(paperDividers[paper.id] || ["·", "·", "·"])[1]}
+          </span>
           <div className="h-px w-16 bg-outline-variant/30" />
-          <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[2]}</span>
+          <span className="text-2xl opacity-40">
+            {(paperDividers[paper.id] || ["·", "·", "·"])[2]}
+          </span>
         </div>
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center gap-4">
+        {/* Navigation - simple 3 buttons */}
+        <div className="flex justify-between items-center">
           {prevPaper ? (
-            <Link href={`/vault/paper/${prevPaper.id}`} className="flex-1 group">
-              <motion.div
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center gap-3 p-4 bg-white rounded-[1.5rem] puffy-shadow hover:-translate-y-1 transition-all"
-              >
-                <span className="text-primary text-xl">←</span>
-                <div className="min-w-0">
-                  <p className="text-[10px] text-outline tracking-wider font-bold">이전</p>
-                  <p className="text-sm font-bold text-on-surface truncate">{prevPaper.title}</p>
-                </div>
-              </motion.div>
+            <Link
+              href={`/vault/paper/${prevPaper.id}`}
+              className="px-5 py-2.5 bg-white rounded-full puffy-shadow text-sm font-bold text-on-surface hover:-translate-y-1 transition-all"
+            >
+              ← 이전
             </Link>
-          ) : <div className="flex-1" />}
+          ) : (
+            <div />
+          )}
 
           <Link
             href="/vault"
             className="w-12 h-12 flex items-center justify-center bg-tertiary-container rounded-full puffy-shadow hover:scale-110 transition-transform shrink-0"
           >
-            <span className="text-xl">📋</span>
+            <span className="text-xl">💌</span>
           </Link>
 
           {nextPaper ? (
-            <Link href={`/vault/paper/${nextPaper.id}`} className="flex-1 group">
-              <motion.div
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-end gap-3 p-4 bg-white rounded-[1.5rem] puffy-shadow hover:-translate-y-1 transition-all"
-              >
-                <div className="min-w-0 text-right">
-                  <p className="text-[10px] text-outline tracking-wider font-bold">다음</p>
-                  <p className="text-sm font-bold text-on-surface truncate">{nextPaper.title}</p>
-                </div>
-                <span className="text-primary text-xl">→</span>
-              </motion.div>
+            <Link
+              href={`/vault/paper/${nextPaper.id}`}
+              className="px-5 py-2.5 bg-white rounded-full puffy-shadow text-sm font-bold text-on-surface hover:-translate-y-1 transition-all"
+            >
+              다음 →
             </Link>
-          ) : <div className="flex-1" />}
+          ) : (
+            <div />
+          )}
         </div>
       </div>
     </div>

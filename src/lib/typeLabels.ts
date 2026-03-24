@@ -27,7 +27,7 @@ export const typeGradients: Record<string, { bg: string; emoji: string }> = {
 
 // paper.id별 고유 이모지 매핑 (카드, 히어로에 사용)
 export const paperEmoji: Record<string, string> = {
-  "wp1-1": "💌",
+  "wp1-1": "💗",
   "wp1-2": "🕰️",
   "wp2-1": "📮",
   "wp2-2": "🔮",

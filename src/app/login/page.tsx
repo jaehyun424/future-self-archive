@@ -38,14 +38,16 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-[80vh] flex items-center justify-center px-4 py-12 relative"
-      style={{ background: "linear-gradient(180deg, #fff5f9 0%, #f8f9fa 100%)" }}
+      style={{
+        background: "linear-gradient(180deg, #fff5f9 0%, #f8f9fa 100%)",
+      }}
     >
-      {/* Decorative background - emoji instead of Material Symbols */}
+      {/* Decorative background */}
       <div className="absolute top-20 left-10 opacity-15 select-none text-6xl">
-        🔒
+        🤫
       </div>
       <div className="absolute bottom-20 right-10 opacity-15 select-none text-7xl rotate-12">
-        🔑
+        ✨
       </div>
 
       <motion.div
@@ -56,13 +58,6 @@ export default function LoginPage() {
       >
         {/* Glassmorphism card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-6 sm:p-8 puffy-shadow relative overflow-hidden">
-          {/* Top decoration */}
-          <div className="mb-4 text-center">
-            <span className="inline-block bg-primary-container text-on-primary-container px-5 py-1 rounded-full text-xs font-bold shadow-sm">
-              비밀 보관소 🔐
-            </span>
-          </div>
-
           <div className="text-center space-y-4">
             {/* Icon */}
             <motion.div
@@ -70,15 +65,17 @@ export default function LoginPage() {
               transition={{ duration: 0.5 }}
               className="text-5xl"
             >
-              {success ? "🎉" : "🔒"}
+              {success ? "🎉" : "🤫"}
             </motion.div>
 
             <div>
               <h1 className="font-headline font-extrabold text-2xl text-primary mb-2">
-                {success ? "환영합니다!" : "비밀 기록 보관소"}
+                {success ? "환영합니다!" : "비밀이야~"}
               </h1>
               <p className="text-sm text-on-surface-variant font-body">
-                {success ? "잠시만 기다려주세요..." : "비밀번호를 입력하세요"}
+                {success
+                  ? "잠시만 기다려주세요..."
+                  : "비밀번호를 알려줘~ 🤫"}
               </p>
             </div>
 
@@ -113,7 +110,7 @@ export default function LoginPage() {
                     />
                   </div>
 
-                  {/* Error message with min-height to prevent layout jump */}
+                  {/* Error message */}
                   <div className="min-h-[1.5rem]">
                     {error && (
                       <motion.p
@@ -137,7 +134,11 @@ export default function LoginPage() {
                       <span className="flex items-center justify-center gap-2">
                         <motion.span
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                           className="inline-block"
                         >
                           ⏳
@@ -146,7 +147,7 @@ export default function LoginPage() {
                       </span>
                     ) : (
                       <span className="flex items-center justify-center gap-2">
-                        🔓 열기
+                        들어갈래~ ✨
                       </span>
                     )}
                   </motion.button>
@@ -158,7 +159,7 @@ export default function LoginPage() {
 
         {/* Bottom hint */}
         <p className="text-center text-xs text-outline/50 mt-6">
-          이 보관소는 본인만 접근 가능합니다
+          나만 볼 수 있는 비밀 공간 🌙
         </p>
       </motion.div>
     </div>

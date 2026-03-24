@@ -5,11 +5,11 @@ import Link from "next/link";
 import PrivatePlaceholder from "@/components/PrivatePlaceholder";
 import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
-import { typeLabelsKo, paperEmoji, paperGradients, paperImages, paperDividers } from "@/lib/typeLabels";
+import { paperImages, paperDividers } from "@/lib/typeLabels";
 import { useMemo } from "react";
 
 type GroupedBlock =
-  | { kind: "private"; count: number; key: string }
+  | { kind: "private"; count: number; key: string; startIndex: number }
   | { kind: "block"; block: Block; index: number };
 
 function groupBlocks(blocks: Block[]): GroupedBlock[] {
@@ -17,13 +17,14 @@ function groupBlocks(blocks: Block[]): GroupedBlock[] {
   let i = 0;
   while (i < blocks.length) {
     if (blocks[i].isPrivate) {
-      let count = 0;
       const key = blocks[i].id;
+      const startIndex = i;
+      let count = 0;
       while (i < blocks.length && blocks[i].isPrivate) {
         count++;
         i++;
       }
-      result.push({ kind: "private", count, key });
+      result.push({ kind: "private", count, key, startIndex });
     } else {
       result.push({ kind: "block", block: blocks[i], index: i });
       i++;
@@ -33,7 +34,9 @@ function groupBlocks(blocks: Block[]): GroupedBlock[] {
 }
 
 function isHeadingPattern(text: string): boolean {
-  return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(text);
+  return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(
+    text
+  );
 }
 
 function isPriorityHeading(text: string): boolean {
@@ -53,6 +56,12 @@ function getGoalCategory(text: string): string | null {
   return match ? match[1] : null;
 }
 
+const goalCategoryEmoji: Record<string, string> = {
+  창업: "💡",
+  정치: "🏛️",
+  가족: "👨‍👩‍👧",
+};
+
 function renderLetterBlock(block: Block) {
   if (block.text.startsWith("##")) {
     return (
@@ -68,10 +77,10 @@ function renderLetterBlock(block: Block) {
       </div>
     );
   }
-  // First line of a letter (starts with "안녕") - make it bigger and serif
   if (block.text.startsWith("안녕")) {
     return (
       <p className="font-serif text-lg sm:text-xl leading-[1.75] text-on-surface font-bold">
+        <span className="text-primary mr-1">💕</span>
         {block.text}
       </p>
     );
@@ -101,8 +110,9 @@ function renderChecklistBlock(block: Block) {
   if (isHeadingPattern(block.text)) {
     return (
       <div className="border-l-4 border-primary/40 pl-4 py-2 bg-primary-container/10 rounded-r-xl">
-        <p className="font-headline font-bold text-base sm:text-lg text-primary">
-          {block.text}
+        <p className="font-headline font-bold text-base sm:text-lg text-primary flex items-start gap-2">
+          <span className="shrink-0">✿</span>
+          <span>{block.text}</span>
         </p>
       </div>
     );
@@ -121,7 +131,7 @@ function renderImaginationBlock(block: Block) {
     return (
       <div className="pt-6">
         <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="text-3xl">{isPast ? "🔍" : "🔮"}</span>
+          <span className="text-3xl">{isPast ? "🔍" : "🪐"}</span>
         </div>
         <div className="flex items-center gap-3 mb-2">
           <div className="flex-1 h-px bg-outline-variant/30" />
@@ -161,10 +171,14 @@ function renderPrioritiesBlock(block: Block) {
       return (
         <div className="flex items-start gap-4 py-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-200 to-yellow-100 flex items-center justify-center shrink-0 shadow-md">
-            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">{match[1]}</span>
+            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">
+              {match[1]}
+            </span>
           </div>
           <div className="pt-1">
-            <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">{match[2]}</p>
+            <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">
+              {match[2]}
+            </p>
           </div>
         </div>
       );
@@ -177,7 +191,7 @@ function renderPrioritiesBlock(block: Block) {
   );
 }
 
-function renderGoalsBlock(block: Block, prevBlock?: Block) {
+function renderGoalsBlock(block: Block) {
   if (block.text.startsWith("##")) {
     return (
       <div className="pt-4">
@@ -193,28 +207,19 @@ function renderGoalsBlock(block: Block, prevBlock?: Block) {
     );
   }
   if (isGoalHeading(block.text)) {
-    const category = getGoalCategory(block.text);
-    const categoryEmoji: Record<string, string> = { "창업": "🚀", "정치": "🏛️", "가족": "👨‍👩‍👧" };
-    const needsCategoryLabel = !prevBlock || getGoalCategory(prevBlock.text) !== category;
-    const goalText = block.text.replace(/^(창업|정치|가족) 목표 \d+:\s*/, "");
+    const goalText = block.text.replace(
+      /^(창업|정치|가족) 목표 \d+:\s*/,
+      ""
+    );
     const goalNum = block.text.match(/목표 (\d+)/)?.[1];
     return (
-      <>
-        {needsCategoryLabel && category && (
-          <div className="mt-4 mb-2 flex items-center gap-2">
-            <span className="text-xl">{categoryEmoji[category] || "📌"}</span>
-            <span className="font-headline font-bold text-base text-primary">{category}</span>
-            <div className="flex-1 h-px bg-outline-variant/20" />
-          </div>
-        )}
-        <div className="flex items-start gap-3 py-1.5 pl-2">
-          <span className="text-sm mt-0.5">☐</span>
-          <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
-            <span className="text-xs text-outline mr-1">목표{goalNum}</span>
-            {goalText}
-          </p>
-        </div>
-      </>
+      <div className="flex items-start gap-3 py-1.5 pl-2">
+        <span className="text-sm mt-0.5 text-primary/60">✿</span>
+        <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+          <span className="text-xs text-outline mr-1">목표{goalNum}</span>
+          {goalText}
+        </p>
+      </div>
     );
   }
   return (
@@ -246,18 +251,21 @@ function renderStepsBlock(block: Block) {
         <div className="flex items-start gap-4 py-3">
           <div className="flex flex-col items-center">
             <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-orange-300 to-amber-100 flex items-center justify-center shadow-md border-2 border-white">
-              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">{match[1]}</span>
+              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">
+                {match[1]}
+              </span>
             </div>
             <div className="w-0.5 h-4 bg-orange-200 mt-1" />
           </div>
           <div className="pt-1.5">
-            <p className="font-headline font-bold text-base sm:text-lg text-on-surface">{match[2]}</p>
+            <p className="font-headline font-bold text-base sm:text-lg text-on-surface">
+              {match[2]}
+            </p>
           </div>
         </div>
       );
     }
   }
-  // Step answer blocks (indented content after step heading)
   return (
     <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant pl-[3.25rem]">
       {block.text}
@@ -265,7 +273,7 @@ function renderStepsBlock(block: Block) {
   );
 }
 
-function renderBlockByType(type: string, block: Block, allBlocks: Block[], blockIdx: number) {
+function renderBlockByType(type: string, block: Block) {
   switch (type) {
     case "letter":
       return renderLetterBlock(block);
@@ -275,10 +283,8 @@ function renderBlockByType(type: string, block: Block, allBlocks: Block[], block
       return renderImaginationBlock(block);
     case "priorities":
       return renderPrioritiesBlock(block);
-    case "goals": {
-      const prevVisible = allBlocks.slice(0, blockIdx).filter(b => !b.isPrivate).pop();
-      return renderGoalsBlock(block, prevVisible);
-    }
+    case "goals":
+      return renderGoalsBlock(block);
     case "steps":
       return renderStepsBlock(block);
     default:
@@ -296,6 +302,41 @@ export default function PaperReaderClient({
   nextPaper: Paper | null;
 }) {
   const grouped = useMemo(() => groupBlocks(paper.blocks), [paper.blocks]);
+
+  // Pre-compute category headers for goals type (fixes private block category bug)
+  const goalsCategoryHeaders = useMemo(() => {
+    if (paper.type !== "goals") return {};
+    const map: Record<number, string> = {};
+    let lastCategory: string | null = null;
+
+    for (let idx = 0; idx < grouped.length; idx++) {
+      const item = grouped[idx];
+      if (item.kind === "block" && isGoalHeading(item.block.text)) {
+        const cat = getGoalCategory(item.block.text);
+        if (cat && cat !== lastCategory) {
+          map[idx] = cat;
+          lastCategory = cat;
+        } else if (cat) {
+          lastCategory = cat;
+        }
+      } else if (item.kind === "private") {
+        // Find next public goal heading after this private group
+        for (let j = idx + 1; j < grouped.length; j++) {
+          const next = grouped[j];
+          if (next.kind === "block" && isGoalHeading(next.block.text)) {
+            const nextCat = getGoalCategory(next.block.text);
+            if (nextCat && nextCat !== lastCategory) {
+              map[idx] = nextCat;
+              lastCategory = nextCat;
+            }
+            break;
+          }
+        }
+      }
+    }
+    return map;
+  }, [grouped, paper.type]);
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Hero Header */}
@@ -304,29 +345,16 @@ export default function PaperReaderClient({
         animate={{ opacity: 1, y: 0 }}
         className="relative mb-8 sm:mb-12"
       >
-        {/* Washi tape label */}
-        <div className="absolute -top-3 -left-2 sm:-left-4 z-10">
-          <div className="bg-secondary-container text-on-secondary-container px-4 sm:px-6 py-1.5 font-bold text-xs shadow-sm -rotate-3 rounded-sm">
-            기록 {paper.num} ✿
-          </div>
+        {/* Hero image - clean, no overlays */}
+        <div className="relative w-full aspect-[16/10] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+          <img
+            src={paperImages[paper.id]}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </div>
 
-        {/* Hero image with gradient overlay and emoji */}
-        <div className="relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
-          <img src={paperImages[paper.id]} alt="" className="absolute inset-0 w-full h-full object-cover" />
-          <div className={`absolute inset-0 bg-gradient-to-br ${paperGradients[paper.id]} opacity-50`} />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl sm:text-8xl drop-shadow-lg">{paperEmoji[paper.id]}</span>
-          </div>
-          <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg">
-            <span className="text-sm font-bold text-primary flex items-center gap-1">
-              <span className="text-lg">{paperEmoji[paper.id]}</span>
-              {typeLabelsKo[paper.type]}
-            </span>
-          </div>
-        </div>
-
-        {/* Badge & Title */}
+        {/* Title */}
         <div className="text-center space-y-3">
           <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
             {paper.subtitle}
@@ -335,7 +363,9 @@ export default function PaperReaderClient({
             {paper.title}
           </h1>
           {paper.timeline && (
-            <p className="text-sm text-outline italic font-body">{paper.timeline}</p>
+            <p className="text-sm text-outline italic font-body">
+              {paper.timeline}
+            </p>
           )}
         </div>
       </motion.section>
@@ -345,7 +375,7 @@ export default function PaperReaderClient({
         <LottieWrapper
           src="/lottie/envelope.json"
           className="w-20 h-20 opacity-70"
-          fallbackEmoji="💌"
+          fallbackEmoji="📬"
         />
       </div>
 
@@ -367,72 +397,87 @@ export default function PaperReaderClient({
               key={item.kind === "private" ? item.key : item.block.id}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + i * 0.05, type: "spring", damping: 25 }}
+              transition={{
+                delay: 0.1 + i * 0.05,
+                type: "spring",
+                damping: 25,
+              }}
             >
+              {/* Goals category header (handles private group boundary) */}
+              {goalsCategoryHeaders[i] && (
+                <div className="mt-4 mb-2 flex items-center gap-2">
+                  <span className="text-xl">
+                    {goalCategoryEmoji[goalsCategoryHeaders[i]] || "📌"}
+                  </span>
+                  <span className="font-headline font-bold text-base text-primary">
+                    {goalsCategoryHeaders[i]}
+                  </span>
+                  <div className="flex-1 h-px bg-outline-variant/20" />
+                </div>
+              )}
+
               {item.kind === "private" ? (
-                <PrivatePlaceholder count={item.count} />
+                <PrivatePlaceholder />
               ) : (
-                renderBlockByType(paper.type, item.block, paper.blocks, item.index)
+                renderBlockByType(paper.type, item.block)
               )}
             </motion.div>
           ))}
-        </div>
 
+          {/* Letter date at end */}
+          {paper.type === "letter" && paper.timeline && (
+            <p className="text-right text-sm text-outline italic font-serif mt-8">
+              {paper.timeline.split("→")[0].trim()}
+            </p>
+          )}
+        </div>
       </motion.article>
 
       {/* Emoji divider */}
       <div className="flex items-center justify-center gap-4 py-8">
-        <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[0]}</span>
+        <span className="text-2xl opacity-40">
+          {(paperDividers[paper.id] || ["·", "·", "·"])[0]}
+        </span>
         <div className="h-px w-16 bg-outline-variant/30" />
-        <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[1]}</span>
+        <span className="text-2xl opacity-40">
+          {(paperDividers[paper.id] || ["·", "·", "·"])[1]}
+        </span>
         <div className="h-px w-16 bg-outline-variant/30" />
-        <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[2]}</span>
+        <span className="text-2xl opacity-40">
+          {(paperDividers[paper.id] || ["·", "·", "·"])[2]}
+        </span>
       </div>
 
-      {/* Navigation */}
-      <div className="flex justify-between items-center gap-4">
+      {/* Navigation - simple 3 buttons */}
+      <div className="flex justify-between items-center">
         {prevPaper ? (
           <Link
             href={`/paper/${prevPaper.id}`}
-            className="flex-1 group"
+            className="px-5 py-2.5 bg-white rounded-full puffy-shadow text-sm font-bold text-on-surface hover:-translate-y-1 transition-all"
           >
-            <motion.div
-              whileTap={{ scale: 0.96 }}
-              className="flex items-center gap-3 p-4 bg-white rounded-[1.5rem] puffy-shadow hover:-translate-y-1 transition-all"
-            >
-              <span className="text-primary text-xl">←</span>
-              <div className="min-w-0">
-                <p className="text-[10px] text-outline tracking-wider font-bold">이전</p>
-                <p className="text-sm font-bold text-on-surface truncate">{prevPaper.title}</p>
-              </div>
-            </motion.div>
+            ← 이전
           </Link>
-        ) : <div className="flex-1" />}
+        ) : (
+          <div />
+        )}
 
         <Link
           href="/"
-          className="w-12 h-12 flex items-center justify-center bg-primary-container rounded-full puffy-shadow hover:scale-110 transition-transform shrink-0"
+          className="w-12 h-12 flex items-center justify-center bg-primary-container rounded-full puffy-shadow hover:scale-110 transition-transform"
         >
-          <span className="text-xl">🏠</span>
+          <span className="text-xl">💌</span>
         </Link>
 
         {nextPaper ? (
           <Link
             href={`/paper/${nextPaper.id}`}
-            className="flex-1 group"
+            className="px-5 py-2.5 bg-white rounded-full puffy-shadow text-sm font-bold text-on-surface hover:-translate-y-1 transition-all"
           >
-            <motion.div
-              whileTap={{ scale: 0.96 }}
-              className="flex items-center justify-end gap-3 p-4 bg-white rounded-[1.5rem] puffy-shadow hover:-translate-y-1 transition-all"
-            >
-              <div className="min-w-0 text-right">
-                <p className="text-[10px] text-outline tracking-wider font-bold">다음</p>
-                <p className="text-sm font-bold text-on-surface truncate">{nextPaper.title}</p>
-              </div>
-              <span className="text-primary text-xl">→</span>
-            </motion.div>
+            다음 →
           </Link>
-        ) : <div className="flex-1" />}
+        ) : (
+          <div />
+        )}
       </div>
     </div>
   );

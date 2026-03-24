@@ -69,7 +69,7 @@ export default function Navigation() {
               href="/login"
               className="flex items-center gap-1.5 px-5 py-2.5 bg-primary text-white rounded-full text-sm font-bold hover:scale-105 transition-transform puffy-shadow"
             >
-              <span className="text-base">🔒</span>
+              <span className="text-base">🌙</span>
               로그인
             </Link>
           )}
