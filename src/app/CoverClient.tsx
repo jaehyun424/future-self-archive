@@ -6,7 +6,7 @@ import FloatingDecorations from "@/components/FloatingDecorations";
 
 const groups = [
   { title: "현재 → 미래에게 보내는 편지", emoji: "💌", href: "/paper/wp1-1", sub: "3년 후 · 10년 후", bg: "linear-gradient(135deg, #fdf2f8 0%, #fff5f9 50%, #ffffff 100%)" },
-  { title: "미래 → 현재에게 보내는 편지", emoji: "📮", href: "/paper/wp2-1", sub: "3년 후가 · 10년 후가", bg: "linear-gradient(135deg, #f0fdf4 0%, #f5fff8 50%, #ffffff 100%)" },
+  { title: "미래 → 현재에게 보내는 편지", emoji: "📮", href: "/paper/wp2-1", sub: "3년 후 · 10년 후", bg: "linear-gradient(135deg, #f0fdf4 0%, #f5fff8 50%, #ffffff 100%)" },
   { title: "위협 요인 7가지", emoji: "⚡", href: "/paper/wp3", bg: "linear-gradient(135deg, #fef2f2 0%, #fff5f5 50%, #ffffff 100%)" },
   { title: "미래의 나 상상 도구", emoji: "🌈", href: "/paper/wp4", bg: "linear-gradient(135deg, #f0f9ff 0%, #f5faff 50%, #ffffff 100%)" },
   { title: "진실 7가지", emoji: "💎", href: "/paper/wp5", bg: "linear-gradient(135deg, #ecfeff 0%, #f2feff 50%, #ffffff 100%)" },
@@ -84,16 +84,12 @@ export default function CoverClient() {
                 damping: 25,
                 stiffness: 120,
               }}
-              whileTap={{ scale: 0.9, rotate: -2 }}
-              whileHover={{
-                y: -12,
-                boxShadow: "0 24px 60px -8px rgba(133,77,103,0.25)",
-                transition: { type: "spring", damping: 22, stiffness: 130 },
-              }}
+              whileTap={{ scale: 0.93, rotate: -1 }}
+              className="group"
             >
               <Link href={group.href} className="block">
                 <div
-                  className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-shadow duration-300 hover:shadow-[0_20px_60px_-8px_rgba(133,77,103,0.18)] overflow-hidden min-h-[180px] sm:min-h-[220px]"
+                  className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_24px_60px_-8px_rgba(133,77,103,0.25)] overflow-hidden min-h-[180px] sm:min-h-[220px] will-change-transform"
                   style={{ background: group.bg }}
                 >
                   <span className="text-4xl sm:text-5xl mb-3">{group.emoji}</span>
