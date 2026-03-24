@@ -19,7 +19,7 @@ export default function RootLayout({
         <Navigation />
         <main className="flex-1 relative z-10">{children}</main>
         <footer className="text-center py-8 text-xs text-outline/60 font-body relative z-10">
-          <p>&copy; 2026 김재현 · 미래의 나에게 보내는 기록</p>
+          <p>미래의 나에게 보내는 기록</p>
         </footer>
       </body>
     </html>

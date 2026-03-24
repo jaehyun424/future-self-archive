@@ -5,7 +5,7 @@ import Link from "next/link";
 import PrivateHighlight from "@/components/PrivateHighlight";
 import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
-import { typeLabelsKo, typeEmoji, typeGradients } from "@/lib/typeLabels";
+import { typeLabelsKo, paperEmoji, paperGradients, paperImages, paperDividers } from "@/lib/typeLabels";
 
 function isHeadingPattern(text: string): boolean {
   return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(text);
@@ -268,8 +268,6 @@ export default function VaultReaderClient({
   prevPaper: Paper | null;
   nextPaper: Paper | null;
 }) {
-  const grad = typeGradients[paper.type];
-
   return (
     <div className="bg-vault-texture min-h-[80vh]">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -286,9 +284,13 @@ export default function VaultReaderClient({
             </div>
           </div>
 
-          {/* Hero gradient with emoji */}
-          <div className={`relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6 bg-gradient-to-br ${grad.bg} flex items-center justify-center`}>
-            <span className="text-6xl sm:text-8xl">{grad.emoji}</span>
+          {/* Hero image with gradient overlay and emoji */}
+          <div className="relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+            <img src={paperImages[paper.id]} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <div className={`absolute inset-0 bg-gradient-to-br ${paperGradients[paper.id]} opacity-50`} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-6xl sm:text-8xl drop-shadow-lg">{paperEmoji[paper.id]}</span>
+            </div>
             <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5">
               <span className="text-sm">👁️</span>
               <span className="text-sm font-bold text-tertiary">전체 공개</span>
@@ -312,7 +314,7 @@ export default function VaultReaderClient({
         {/* Lottie sparkle */}
         <div className="flex justify-center mb-6">
           <LottieWrapper
-            src="https://lottie.host/2bc21e6b-433e-4060-9160-15204dde2a6a/UkfXxMFfaP.lottie"
+            src="/lottie/sparkle.json"
             className="w-16 h-16 opacity-60"
             fallbackEmoji="✨"
           />
@@ -333,7 +335,7 @@ export default function VaultReaderClient({
           {/* Mood bar */}
           <div className="flex items-center gap-3 p-4 bg-surface-container-low rounded-[1.5rem] mb-8">
             <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-xl shadow-inner">
-              {typeEmoji[paper.type]}
+              {paperEmoji[paper.id]}
             </div>
             <div>
               <p className="text-[10px] font-bold tracking-wider text-primary/60">타입</p>
@@ -364,23 +366,15 @@ export default function VaultReaderClient({
             ))}
           </div>
 
-          {/* Bottom decoration */}
-          <div className="mt-10 flex justify-center">
-            <div className="bg-tertiary-container/30 px-8 py-3 rotate-1 rounded-sm shadow-sm">
-              <span className="font-headline font-bold text-tertiary tracking-wider text-sm">
-                {typeEmoji[paper.type]} 전체 기록을 확인했어요
-              </span>
-            </div>
-          </div>
         </motion.article>
 
         {/* Emoji divider */}
         <div className="flex items-center justify-center gap-4 py-8">
-          <span className="text-2xl opacity-40">✨</span>
+          <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[0]}</span>
           <div className="h-px w-16 bg-outline-variant/30" />
-          <span className="text-2xl opacity-40">💫</span>
+          <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[1]}</span>
           <div className="h-px w-16 bg-outline-variant/30" />
-          <span className="text-2xl opacity-40">✨</span>
+          <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[2]}</span>
         </div>
 
         {/* Navigation */}

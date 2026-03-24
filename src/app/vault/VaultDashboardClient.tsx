@@ -38,7 +38,7 @@ export default function VaultDashboardClient({ papers }: { papers: Paper[] }) {
             {/* Lottie decoration */}
             <div className="w-28 h-28 sm:w-36 sm:h-36 shrink-0">
               <LottieWrapper
-                src="https://lottie.host/2bc21e6b-433e-4060-9160-15204dde2a6a/UkfXxMFfaP.lottie"
+                src="/lottie/sparkle.json"
                 className="w-full h-full"
                 fallbackEmoji="✨"
               />

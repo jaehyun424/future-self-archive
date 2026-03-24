@@ -17,15 +17,17 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
         style={{ background: "linear-gradient(180deg, #fff5f9 0%, #f8f9fa 100%)" }}
       >
         <div className="max-w-4xl w-full flex flex-col items-center text-center space-y-6 sm:space-y-8">
-          {/* Hero emoji decoration */}
+          {/* Hero image with emoji overlay */}
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ type: "spring", damping: 20, stiffness: 100 }}
-            className="relative"
+            className="relative w-full max-w-md"
           >
-            <div className="relative bg-white p-6 sm:p-8 rounded-[3rem] puffy-shadow">
-              <div className="flex items-center justify-center gap-3 sm:gap-5 text-5xl sm:text-6xl">
+            <div className="relative rounded-[3rem] overflow-hidden puffy-shadow">
+              <img src="/images/cover-hero.jpg" alt="" className="w-full h-48 sm:h-64 object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-white/30 to-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center gap-3 sm:gap-5 text-5xl sm:text-6xl">
                 <motion.span
                   animate={{ rotate: [-5, 5, -5] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -36,13 +38,13 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
                   animate={{ scale: [1, 1.15, 1] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                 >
-                  ✨
+                  🔮
                 </motion.span>
                 <motion.span
                   animate={{ rotate: [5, -5, 5] }}
                   transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
                 >
-                  📝
+                  🚀
                 </motion.span>
               </div>
             </div>
@@ -54,14 +56,14 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
               transition={{ delay: 0.5, type: "spring", damping: 15 }}
               className="absolute -bottom-4 -right-3 sm:-right-5 bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-headline font-bold text-xs sm:text-sm puffy-shadow border-4 border-white"
             >
-              너를 위한 기록 ✨
+              너를 위한 기록
             </motion.div>
           </motion.div>
 
           {/* Lottie sparkle */}
           <div className="w-24 h-24 pointer-events-none opacity-60">
             <LottieWrapper
-              src="https://lottie.host/2bc21e6b-433e-4060-9160-15204dde2a6a/UkfXxMFfaP.lottie"
+              src="/lottie/sparkle.json"
               className="w-full h-full"
             />
           </div>
@@ -82,9 +84,6 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
             <p className="text-base sm:text-lg text-on-surface-variant font-body mt-2">
               과거에서 온 <span className="text-primary font-bold">행복한 메시지</span>가
               <br className="sm:hidden" /> 당신을 기다리고 있어요
-            </p>
-            <p className="text-sm text-outline italic font-body">
-              김재현 · 2026.03.24
             </p>
           </motion.div>
 
@@ -110,7 +109,7 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
           className="mb-8 text-center"
         >
           <div className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary-container text-on-primary-container rounded-full font-bold text-sm tracking-wider">
-            <span className="text-lg">📜</span>
+            <span className="text-lg">📖</span>
             <span>{papers.length}개의 기록</span>
           </div>
         </motion.div>

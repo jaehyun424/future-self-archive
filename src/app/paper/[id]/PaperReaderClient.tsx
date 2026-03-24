@@ -5,7 +5,7 @@ import Link from "next/link";
 import PrivatePlaceholder from "@/components/PrivatePlaceholder";
 import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
-import { typeLabelsKo, typeEmoji, typeGradients } from "@/lib/typeLabels";
+import { typeLabelsKo, paperEmoji, paperGradients, paperImages, paperDividers } from "@/lib/typeLabels";
 import { useMemo } from "react";
 
 type GroupedBlock =
@@ -296,8 +296,6 @@ export default function PaperReaderClient({
   nextPaper: Paper | null;
 }) {
   const grouped = useMemo(() => groupBlocks(paper.blocks), [paper.blocks]);
-  const grad = typeGradients[paper.type];
-
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Hero Header */}
@@ -309,16 +307,20 @@ export default function PaperReaderClient({
         {/* Washi tape label */}
         <div className="absolute -top-3 -left-2 sm:-left-4 z-10">
           <div className="bg-secondary-container text-on-secondary-container px-4 sm:px-6 py-1.5 font-bold text-xs shadow-sm -rotate-3 rounded-sm">
-            워크페이퍼 {paper.num} ✿
+            기록 {paper.num} ✿
           </div>
         </div>
 
-        {/* Hero gradient with emoji instead of image */}
-        <div className={`relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6 bg-gradient-to-br ${grad.bg} flex items-center justify-center`}>
-          <span className="text-6xl sm:text-8xl">{grad.emoji}</span>
+        {/* Hero image with gradient overlay and emoji */}
+        <div className="relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+          <img src={paperImages[paper.id]} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${paperGradients[paper.id]} opacity-50`} />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-6xl sm:text-8xl drop-shadow-lg">{paperEmoji[paper.id]}</span>
+          </div>
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg">
             <span className="text-sm font-bold text-primary flex items-center gap-1">
-              <span className="text-lg">{typeEmoji[paper.type]}</span>
+              <span className="text-lg">{paperEmoji[paper.id]}</span>
               {typeLabelsKo[paper.type]}
             </span>
           </div>
@@ -341,7 +343,7 @@ export default function PaperReaderClient({
       {/* Lottie envelope animation */}
       <div className="flex justify-center mb-6">
         <LottieWrapper
-          src="https://lottie.host/aa610ec0-08e7-4a88-961c-98b5bb1e58e5/EqFkBXJhIt.lottie"
+          src="/lottie/envelope.json"
           className="w-20 h-20 opacity-70"
           fallbackEmoji="💌"
         />
@@ -376,23 +378,15 @@ export default function PaperReaderClient({
           ))}
         </div>
 
-        {/* Bottom washi tape */}
-        <div className="mt-10 flex justify-center">
-          <div className="bg-secondary-container/50 px-8 py-3 rotate-1 rounded-sm shadow-sm">
-            <span className="font-headline font-bold text-primary tracking-wider text-sm">
-              {typeEmoji[paper.type]} 워크페이퍼 {paper.num} 읽기 완료
-            </span>
-          </div>
-        </div>
       </motion.article>
 
       {/* Emoji divider */}
       <div className="flex items-center justify-center gap-4 py-8">
-        <span className="text-2xl opacity-40">💫</span>
+        <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[0]}</span>
         <div className="h-px w-16 bg-outline-variant/30" />
-        <span className="text-2xl opacity-40">✨</span>
+        <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[1]}</span>
         <div className="h-px w-16 bg-outline-variant/30" />
-        <span className="text-2xl opacity-40">💫</span>
+        <span className="text-2xl opacity-40">{(paperDividers[paper.id] || ["·","·","·"])[2]}</span>
       </div>
 
       {/* Navigation */}

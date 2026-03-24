@@ -55,13 +55,15 @@ export default function LoginPage() {
         className="w-full max-w-sm relative"
       >
         {/* Glassmorphism card */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-8 sm:p-10 puffy-shadow relative overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-6 sm:p-8 puffy-shadow relative overflow-hidden">
           {/* Top decoration */}
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-5 py-1 rounded-full text-xs font-bold shadow-sm">
-            비밀 보관소 🔐
+          <div className="mb-4 text-center">
+            <span className="inline-block bg-primary-container text-on-primary-container px-5 py-1 rounded-full text-xs font-bold shadow-sm">
+              비밀 보관소 🔐
+            </span>
           </div>
 
-          <div className="text-center space-y-6 pt-4">
+          <div className="text-center space-y-4">
             {/* Icon */}
             <motion.div
               animate={{ rotate: success ? [0, -10, 10, 0] : undefined }}
@@ -89,7 +91,7 @@ export default function LoginPage() {
                   className="py-4"
                 >
                   <LottieWrapper
-                    src="https://lottie.host/c1b97e3a-771a-4fc9-8aa0-91fcd804d957/V8YPGCX7Nv.lottie"
+                    src="/lottie/success.json"
                     className="w-32 h-32 mx-auto"
                     loop={false}
                   />
@@ -98,7 +100,7 @@ export default function LoginPage() {
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
-                  className="space-y-6"
+                  className="space-y-4"
                 >
                   <div className="relative">
                     <input
