@@ -2,15 +2,11 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useState, useMemo } from "react";
 import PrivateHighlight from "@/components/PrivateHighlight";
 import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
-import {
-  typeLabelsKo,
-  paperEmoji,
-  paperImages,
-  paperDividers,
-} from "@/lib/typeLabels";
+import { typeLabelsKo, paperEmoji, paperImages } from "@/lib/typeLabels";
 
 function isHeadingPattern(text: string): boolean {
   return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(
@@ -35,6 +31,28 @@ function getGoalCategory(text: string): string | null {
   return match ? match[1] : null;
 }
 
+const goalCategoryEmoji: Record<string, string> = {
+  창업: "💡",
+  정치: "🏛️",
+  가족: "👨‍👩‍👧",
+};
+
+const stepBadgeStyles = [
+  { bg: "#f9a8d4", bgLight: "#fce7f3", text: "#9d174d", line: "#fbcfe8" },
+  { bg: "#7dd3fc", bgLight: "#e0f2fe", text: "#0c4a6e", line: "#bae6fd" },
+  { bg: "#6ee7b7", bgLight: "#d1fae5", text: "#065f46", line: "#a7f3d0" },
+  { bg: "#c4b5fd", bgLight: "#ede9fe", text: "#5b21b6", line: "#ddd6fe" },
+  { bg: "#fcd34d", bgLight: "#fef3c7", text: "#92400e", line: "#fde68a" },
+  { bg: "#5eead4", bgLight: "#ccfbf1", text: "#115e59", line: "#99f6e4" },
+  { bg: "#fda4af", bgLight: "#ffe4e6", text: "#9f1239", line: "#fecdd3" },
+];
+
+const priorityBadgeStyles = [
+  { bg: "#fda4af", bgLight: "#ffe4e6", text: "#9f1239" },
+  { bg: "#fcd34d", bgLight: "#fef3c7", text: "#92400e" },
+  { bg: "#6ee7b7", bgLight: "#d1fae5", text: "#065f46" },
+];
+
 function renderLetterBlock(block: Block) {
   if (block.text.startsWith("##")) {
     return (
@@ -53,7 +71,7 @@ function renderLetterBlock(block: Block) {
   if (block.text.startsWith("안녕")) {
     return (
       <p className="font-serif text-lg sm:text-xl leading-[1.75] text-on-surface font-bold">
-        <span className="text-primary mr-1">💕</span>
+        <span className="text-primary mr-1">🌸</span>
         {block.text}
       </p>
     );
@@ -84,7 +102,7 @@ function renderChecklistBlock(block: Block) {
     return (
       <div className="border-l-4 border-tertiary/40 pl-4 py-2 bg-tertiary-container/10 rounded-r-xl">
         <p className="font-headline font-bold text-base sm:text-lg text-primary flex items-start gap-2">
-          <span className="shrink-0">✿</span>
+          <span className="shrink-0">🌷</span>
           <span>{block.text}</span>
         </p>
       </div>
@@ -141,14 +159,27 @@ function renderPrioritiesBlock(block: Block) {
   if (isPriorityHeading(block.text)) {
     const match = block.text.match(/^우선순위 (\d+):\s*(.*)/);
     if (match) {
+      const colorIdx = Math.min(
+        parseInt(match[1]) - 1,
+        priorityBadgeStyles.length - 1
+      );
+      const style = priorityBadgeStyles[colorIdx];
       return (
         <div className="flex items-start gap-4 py-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-200 to-yellow-100 flex items-center justify-center shrink-0 shadow-md">
-            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">
+          <div
+            className="w-11 h-11 sm:w-13 sm:h-13 rounded-full flex items-center justify-center shrink-0 shadow-md"
+            style={{
+              background: `linear-gradient(135deg, ${style.bg}, ${style.bgLight})`,
+            }}
+          >
+            <span
+              className="font-headline font-extrabold text-lg sm:text-xl"
+              style={{ color: style.text }}
+            >
               {match[1]}
             </span>
           </div>
-          <div className="pt-1">
+          <div className="pt-1.5">
             <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">
               {match[2]}
             </p>
@@ -164,7 +195,7 @@ function renderPrioritiesBlock(block: Block) {
   );
 }
 
-function renderGoalsBlock(block: Block, prevBlock?: Block) {
+function renderGoalsBlock(block: Block) {
   if (block.text.startsWith("##")) {
     return (
       <div className="pt-4">
@@ -180,40 +211,19 @@ function renderGoalsBlock(block: Block, prevBlock?: Block) {
     );
   }
   if (isGoalHeading(block.text)) {
-    const category = getGoalCategory(block.text);
-    const categoryEmoji: Record<string, string> = {
-      창업: "💡",
-      정치: "🏛️",
-      가족: "👨‍👩‍👧",
-    };
-    const needsCategoryLabel =
-      !prevBlock || getGoalCategory(prevBlock.text) !== category;
     const goalText = block.text.replace(
       /^(창업|정치|가족) 목표 \d+:\s*/,
       ""
     );
     const goalNum = block.text.match(/목표 (\d+)/)?.[1];
     return (
-      <>
-        {needsCategoryLabel && category && (
-          <div className="mt-4 mb-2 flex items-center gap-2">
-            <span className="text-xl">
-              {categoryEmoji[category] || "📌"}
-            </span>
-            <span className="font-headline font-bold text-base text-primary">
-              {category}
-            </span>
-            <div className="flex-1 h-px bg-outline-variant/20" />
-          </div>
-        )}
-        <div className="flex items-start gap-3 py-1.5 pl-2">
-          <span className="text-sm mt-0.5 text-primary/60">✿</span>
-          <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
-            <span className="text-xs text-outline mr-1">목표{goalNum}</span>
-            {goalText}
-          </p>
-        </div>
-      </>
+      <div className="flex items-start gap-3 py-1.5 pl-2">
+        <span className="text-sm mt-0.5 text-primary/60">✿</span>
+        <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+          <span className="text-xs text-outline mr-1">목표{goalNum}</span>
+          {goalText}
+        </p>
+      </div>
     );
   }
   return (
@@ -241,15 +251,28 @@ function renderStepsBlock(block: Block) {
   if (isStepHeading(block.text)) {
     const match = block.text.match(/^(\d+)단계:\s*(.*)/);
     if (match) {
+      const stepNum = parseInt(match[1]) - 1;
+      const style = stepBadgeStyles[stepNum % stepBadgeStyles.length];
       return (
         <div className="flex items-start gap-4 py-3">
           <div className="flex flex-col items-center">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-orange-300 to-amber-100 flex items-center justify-center shadow-md border-2 border-white">
-              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">
+            <div
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md border-2 border-white"
+              style={{
+                background: `linear-gradient(135deg, ${style.bg}, ${style.bgLight})`,
+              }}
+            >
+              <span
+                className="font-headline font-extrabold text-sm sm:text-base"
+                style={{ color: style.text }}
+              >
                 {match[1]}
               </span>
             </div>
-            <div className="w-0.5 h-4 bg-orange-200 mt-1" />
+            <div
+              className="w-0.5 h-4 mt-1"
+              style={{ background: style.line }}
+            />
           </div>
           <div className="pt-1.5">
             <p className="font-headline font-bold text-base sm:text-lg text-on-surface">
@@ -267,12 +290,7 @@ function renderStepsBlock(block: Block) {
   );
 }
 
-function renderBlockByType(
-  type: string,
-  block: Block,
-  allBlocks: Block[],
-  blockIdx: number
-) {
+function renderBlockByType(type: string, block: Block) {
   switch (type) {
     case "letter":
       return renderLetterBlock(block);
@@ -282,10 +300,8 @@ function renderBlockByType(
       return renderImaginationBlock(block);
     case "priorities":
       return renderPrioritiesBlock(block);
-    case "goals": {
-      const prevBlock = allBlocks.slice(0, blockIdx).pop();
-      return renderGoalsBlock(block, prevBlock);
-    }
+    case "goals":
+      return renderGoalsBlock(block);
     case "steps":
       return renderStepsBlock(block);
     default:
@@ -302,21 +318,46 @@ export default function VaultReaderClient({
   prevPaper: Paper | null;
   nextPaper: Paper | null;
 }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Pre-compute category headers for goals
+  const goalsCategoryHeaders = useMemo(() => {
+    if (paper.type !== "goals") return {};
+    const map: Record<number, string> = {};
+    let lastCategory: string | null = null;
+
+    for (let idx = 0; idx < paper.blocks.length; idx++) {
+      const block = paper.blocks[idx];
+      if (isGoalHeading(block.text)) {
+        const cat = getGoalCategory(block.text);
+        if (cat && cat !== lastCategory) {
+          map[idx] = cat;
+          lastCategory = cat;
+        } else if (cat) {
+          lastCategory = cat;
+        }
+      }
+    }
+    return map;
+  }, [paper.blocks, paper.type]);
+
   return (
     <div className="bg-vault-texture min-h-[80vh]">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Hero Header */}
         <motion.section
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", damping: 25, stiffness: 120 }}
           className="relative mb-8 sm:mb-12"
         >
-          {/* Hero image - clean, no overlays */}
-          <div className="relative w-full aspect-[16/10] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+          {/* Hero image — fixed height, no crop */}
+          <div className="relative w-full h-48 sm:h-56 md:h-64 rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
             <img
               src={paperImages[paper.id]}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover"
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-[filter] duration-500 ${imageLoaded ? "" : "blur-sm"}`}
+              onLoad={() => setImageLoaded(true)}
             />
           </div>
 
@@ -347,9 +388,14 @@ export default function VaultReaderClient({
 
         {/* Content */}
         <motion.article
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.15,
+            type: "spring",
+            damping: 25,
+            stiffness: 120,
+          }}
           className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[6px] border-tertiary-container"
         >
           {/* Background decoration */}
@@ -377,31 +423,60 @@ export default function VaultReaderClient({
           </div>
 
           <div className="space-y-5 relative z-10">
-            {paper.blocks.map((block, i) => (
-              <motion.div
-                key={block.id}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.1 + i * 0.05,
-                  type: "spring",
-                  damping: 25,
-                }}
-              >
-                {block.isPrivate ? (
-                  <PrivateHighlight>
-                    {renderBlockByType(
-                      paper.type,
-                      block,
-                      paper.blocks,
-                      i
-                    )}
-                  </PrivateHighlight>
-                ) : (
-                  renderBlockByType(paper.type, block, paper.blocks, i)
-                )}
-              </motion.div>
-            ))}
+            {paper.blocks.map((block, i) => {
+              const isPrivateBlock = block.isPrivate;
+              const isLetterStart =
+                paper.type === "letter" && block.text.startsWith("안녕");
+
+              return (
+                <motion.div
+                  key={block.id}
+                  initial={{
+                    opacity: 0,
+                    ...(isPrivateBlock
+                      ? { x: -10 }
+                      : isLetterStart
+                        ? { scale: 1.02, y: 15 }
+                        : { y: 20 }),
+                  }}
+                  animate={{
+                    opacity: 1,
+                    ...(isPrivateBlock
+                      ? { x: 0 }
+                      : isLetterStart
+                        ? { scale: 1, y: 0 }
+                        : { y: 0 }),
+                  }}
+                  transition={{
+                    delay: 0.1 + i * 0.05,
+                    type: "spring",
+                    damping: 25,
+                    stiffness: 120,
+                  }}
+                >
+                  {/* Goals category header */}
+                  {goalsCategoryHeaders[i] && (
+                    <div className="mt-4 mb-2 flex items-center gap-2">
+                      <span className="text-xl">
+                        {goalCategoryEmoji[goalsCategoryHeaders[i]] || "📌"}
+                      </span>
+                      <span className="font-headline font-bold text-base text-primary">
+                        {goalsCategoryHeaders[i]}
+                      </span>
+                      <div className="flex-1 h-px bg-outline-variant/20" />
+                    </div>
+                  )}
+
+                  {block.isPrivate ? (
+                    <PrivateHighlight>
+                      {renderBlockByType(paper.type, block)}
+                    </PrivateHighlight>
+                  ) : (
+                    renderBlockByType(paper.type, block)
+                  )}
+                </motion.div>
+              );
+            })}
 
             {/* Letter date at end */}
             {paper.type === "letter" && paper.timeline && (
@@ -412,23 +487,17 @@ export default function VaultReaderClient({
           </div>
         </motion.article>
 
-        {/* Emoji divider */}
-        <div className="flex items-center justify-center gap-4 py-8">
-          <span className="text-2xl opacity-40">
-            {(paperDividers[paper.id] || ["·", "·", "·"])[0]}
-          </span>
-          <div className="h-px w-16 bg-outline-variant/30" />
-          <span className="text-2xl opacity-40">
-            {(paperDividers[paper.id] || ["·", "·", "·"])[1]}
-          </span>
-          <div className="h-px w-16 bg-outline-variant/30" />
-          <span className="text-2xl opacity-40">
-            {(paperDividers[paper.id] || ["·", "·", "·"])[2]}
-          </span>
+        {/* Decorative dots divider */}
+        <div className="flex items-center justify-center gap-3 py-6">
+          <div className="w-1.5 h-1.5 rounded-full bg-primary-container" />
+          <div className="h-px w-12 bg-outline-variant/20" />
+          <div className="w-1.5 h-1.5 rounded-full bg-secondary-container" />
+          <div className="h-px w-12 bg-outline-variant/20" />
+          <div className="w-1.5 h-1.5 rounded-full bg-tertiary-container" />
         </div>
 
-        {/* Navigation - simple 3 buttons */}
-        <div className="flex justify-between items-center">
+        {/* Navigation — 3 buttons in one row */}
+        <div className="flex justify-between items-center py-2">
           {prevPaper ? (
             <Link
               href={`/vault/paper/${prevPaper.id}`}
@@ -444,7 +513,7 @@ export default function VaultReaderClient({
             href="/vault"
             className="w-12 h-12 flex items-center justify-center bg-tertiary-container rounded-full puffy-shadow hover:scale-110 transition-transform shrink-0"
           >
-            <span className="text-xl">💌</span>
+            <span className="text-xl">🏠</span>
           </Link>
 
           {nextPaper ? (

@@ -8,6 +8,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const [isOwner, setIsOwner] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const isVault = pathname.startsWith("/vault");
 
   useEffect(() => {
@@ -15,6 +16,12 @@ export default function Navigation() {
       .then((r) => r.json())
       .then((data) => setIsOwner(data.isOwner));
   }, [pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -24,7 +31,13 @@ export default function Navigation() {
   };
 
   return (
-    <header className="bg-white/80 backdrop-blur-xl rounded-b-[3rem] w-full sticky top-0 z-50 shadow-[0_12px_40px_-4px_rgba(255,183,213,0.15)]">
+    <header
+      className={`w-full sticky top-0 z-50 rounded-b-[3rem] transition-all duration-300 ${
+        scrolled
+          ? "bg-white/90 backdrop-blur-2xl shadow-[0_12px_40px_-4px_rgba(255,183,213,0.2)]"
+          : "bg-white/60 backdrop-blur-lg shadow-[0_12px_40px_-4px_rgba(255,183,213,0.1)]"
+      }`}
+    >
       <div className="max-w-5xl mx-auto flex justify-between items-center px-6 sm:px-8 py-5">
         <Link
           href={isVault ? "/vault" : "/"}

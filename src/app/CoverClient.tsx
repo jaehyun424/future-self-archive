@@ -30,8 +30,8 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
             </div>
           </motion.div>
 
-          {/* Lottie sparkle - bigger and more visible */}
-          <div className="w-36 h-36 sm:w-44 sm:h-44 pointer-events-none -mt-4">
+          {/* Lottie sparkle - bigger */}
+          <div className="w-40 h-40 sm:w-48 sm:h-48 pointer-events-none -mt-4">
             <LottieWrapper
               src="/lottie/sparkle.json"
               className="w-full h-full"
@@ -42,7 +42,7 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, type: "spring", damping: 25 }}
+            transition={{ delay: 0.3, type: "spring", damping: 25, stiffness: 120 }}
             className="space-y-4 -mt-4"
           >
             <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary font-bold leading-tight">
@@ -54,8 +54,7 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
               <br className="sm:hidden" /> 당신을 기다리고 있어요
             </p>
             <p className="text-sm text-outline font-body max-w-md mx-auto">
-              벤저민 하디의 퓨처 셀프 워크지를 바탕으로 작성한 편지와 자기 성찰
-              기록입니다
+              {"(벤저민 하디 '퓨처 셀프' 워크지를 바탕으로 작성한 기록)"}
             </p>
           </motion.div>
         </div>

@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useState, useMemo } from "react";
 import PrivatePlaceholder from "@/components/PrivatePlaceholder";
 import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
-import { paperImages, paperDividers } from "@/lib/typeLabels";
-import { useMemo } from "react";
+import { paperImages } from "@/lib/typeLabels";
 
 type GroupedBlock =
   | { kind: "private"; count: number; key: string; startIndex: number }
@@ -31,6 +31,16 @@ function groupBlocks(blocks: Block[]): GroupedBlock[] {
     }
   }
   return result;
+}
+
+// Goals type: don't group private blocks — each gets its own placeholder
+function groupBlocksForGoals(blocks: Block[]): GroupedBlock[] {
+  return blocks.map((block, i) => {
+    if (block.isPrivate) {
+      return { kind: "private" as const, count: 1, key: block.id, startIndex: i };
+    }
+    return { kind: "block" as const, block, index: i };
+  });
 }
 
 function isHeadingPattern(text: string): boolean {
@@ -62,6 +72,22 @@ const goalCategoryEmoji: Record<string, string> = {
   가족: "👨‍👩‍👧",
 };
 
+const stepBadgeStyles = [
+  { bg: "#f9a8d4", bgLight: "#fce7f3", text: "#9d174d", line: "#fbcfe8" },
+  { bg: "#7dd3fc", bgLight: "#e0f2fe", text: "#0c4a6e", line: "#bae6fd" },
+  { bg: "#6ee7b7", bgLight: "#d1fae5", text: "#065f46", line: "#a7f3d0" },
+  { bg: "#c4b5fd", bgLight: "#ede9fe", text: "#5b21b6", line: "#ddd6fe" },
+  { bg: "#fcd34d", bgLight: "#fef3c7", text: "#92400e", line: "#fde68a" },
+  { bg: "#5eead4", bgLight: "#ccfbf1", text: "#115e59", line: "#99f6e4" },
+  { bg: "#fda4af", bgLight: "#ffe4e6", text: "#9f1239", line: "#fecdd3" },
+];
+
+const priorityBadgeStyles = [
+  { bg: "#fda4af", bgLight: "#ffe4e6", text: "#9f1239" },
+  { bg: "#fcd34d", bgLight: "#fef3c7", text: "#92400e" },
+  { bg: "#6ee7b7", bgLight: "#d1fae5", text: "#065f46" },
+];
+
 function renderLetterBlock(block: Block) {
   if (block.text.startsWith("##")) {
     return (
@@ -80,7 +106,7 @@ function renderLetterBlock(block: Block) {
   if (block.text.startsWith("안녕")) {
     return (
       <p className="font-serif text-lg sm:text-xl leading-[1.75] text-on-surface font-bold">
-        <span className="text-primary mr-1">💕</span>
+        <span className="text-primary mr-1">🌸</span>
         {block.text}
       </p>
     );
@@ -111,7 +137,7 @@ function renderChecklistBlock(block: Block) {
     return (
       <div className="border-l-4 border-primary/40 pl-4 py-2 bg-primary-container/10 rounded-r-xl">
         <p className="font-headline font-bold text-base sm:text-lg text-primary flex items-start gap-2">
-          <span className="shrink-0">✿</span>
+          <span className="shrink-0">🌷</span>
           <span>{block.text}</span>
         </p>
       </div>
@@ -168,14 +194,27 @@ function renderPrioritiesBlock(block: Block) {
   if (isPriorityHeading(block.text)) {
     const match = block.text.match(/^우선순위 (\d+):\s*(.*)/);
     if (match) {
+      const colorIdx = Math.min(
+        parseInt(match[1]) - 1,
+        priorityBadgeStyles.length - 1
+      );
+      const style = priorityBadgeStyles[colorIdx];
       return (
         <div className="flex items-start gap-4 py-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-200 to-yellow-100 flex items-center justify-center shrink-0 shadow-md">
-            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">
+          <div
+            className="w-11 h-11 sm:w-13 sm:h-13 rounded-full flex items-center justify-center shrink-0 shadow-md"
+            style={{
+              background: `linear-gradient(135deg, ${style.bg}, ${style.bgLight})`,
+            }}
+          >
+            <span
+              className="font-headline font-extrabold text-lg sm:text-xl"
+              style={{ color: style.text }}
+            >
               {match[1]}
             </span>
           </div>
-          <div className="pt-1">
+          <div className="pt-1.5">
             <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">
               {match[2]}
             </p>
@@ -247,15 +286,28 @@ function renderStepsBlock(block: Block) {
   if (isStepHeading(block.text)) {
     const match = block.text.match(/^(\d+)단계:\s*(.*)/);
     if (match) {
+      const stepNum = parseInt(match[1]) - 1;
+      const style = stepBadgeStyles[stepNum % stepBadgeStyles.length];
       return (
         <div className="flex items-start gap-4 py-3">
           <div className="flex flex-col items-center">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-orange-300 to-amber-100 flex items-center justify-center shadow-md border-2 border-white">
-              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">
+            <div
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md border-2 border-white"
+              style={{
+                background: `linear-gradient(135deg, ${style.bg}, ${style.bgLight})`,
+              }}
+            >
+              <span
+                className="font-headline font-extrabold text-sm sm:text-base"
+                style={{ color: style.text }}
+              >
                 {match[1]}
               </span>
             </div>
-            <div className="w-0.5 h-4 bg-orange-200 mt-1" />
+            <div
+              className="w-0.5 h-4 mt-1"
+              style={{ background: style.line }}
+            />
           </div>
           <div className="pt-1.5">
             <p className="font-headline font-bold text-base sm:text-lg text-on-surface">
@@ -301,9 +353,17 @@ export default function PaperReaderClient({
   prevPaper: Paper | null;
   nextPaper: Paper | null;
 }) {
-  const grouped = useMemo(() => groupBlocks(paper.blocks), [paper.blocks]);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Pre-compute category headers for goals type (fixes private block category bug)
+  const grouped = useMemo(
+    () =>
+      paper.type === "goals"
+        ? groupBlocksForGoals(paper.blocks)
+        : groupBlocks(paper.blocks),
+    [paper.blocks, paper.type]
+  );
+
+  // Pre-compute category headers for goals — only on public block boundaries
   const goalsCategoryHeaders = useMemo(() => {
     if (paper.type !== "goals") return {};
     const map: Record<number, string> = {};
@@ -319,20 +379,8 @@ export default function PaperReaderClient({
         } else if (cat) {
           lastCategory = cat;
         }
-      } else if (item.kind === "private") {
-        // Find next public goal heading after this private group
-        for (let j = idx + 1; j < grouped.length; j++) {
-          const next = grouped[j];
-          if (next.kind === "block" && isGoalHeading(next.block.text)) {
-            const nextCat = getGoalCategory(next.block.text);
-            if (nextCat && nextCat !== lastCategory) {
-              map[idx] = nextCat;
-              lastCategory = nextCat;
-            }
-            break;
-          }
-        }
       }
+      // Private blocks: skip — don't look ahead for next category
     }
     return map;
   }, [grouped, paper.type]);
@@ -341,16 +389,18 @@ export default function PaperReaderClient({
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Hero Header */}
       <motion.section
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 120 }}
         className="relative mb-8 sm:mb-12"
       >
-        {/* Hero image - clean, no overlays */}
-        <div className="relative w-full aspect-[16/10] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+        {/* Hero image — fixed height, no crop */}
+        <div className="relative w-full h-48 sm:h-56 md:h-64 rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
           <img
             src={paperImages[paper.id]}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-[filter] duration-500 ${imageLoaded ? "" : "blur-sm"}`}
+            onLoad={() => setImageLoaded(true)}
           />
         </div>
 
@@ -370,7 +420,7 @@ export default function PaperReaderClient({
         </div>
       </motion.section>
 
-      {/* Lottie envelope animation */}
+      {/* Lottie envelope */}
       <div className="flex justify-center mb-6">
         <LottieWrapper
           src="/lottie/envelope.json"
@@ -381,9 +431,14 @@ export default function PaperReaderClient({
 
       {/* Content */}
       <motion.article
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.15,
+          type: "spring",
+          damping: 25,
+          stiffness: 120,
+        }}
         className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[6px] border-primary-container"
       >
         {/* Background decoration */}
@@ -392,37 +447,60 @@ export default function PaperReaderClient({
         </div>
 
         <div className="space-y-5 relative z-10">
-          {grouped.map((item, i) => (
-            <motion.div
-              key={item.kind === "private" ? item.key : item.block.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: 0.1 + i * 0.05,
-                type: "spring",
-                damping: 25,
-              }}
-            >
-              {/* Goals category header (handles private group boundary) */}
-              {goalsCategoryHeaders[i] && (
-                <div className="mt-4 mb-2 flex items-center gap-2">
-                  <span className="text-xl">
-                    {goalCategoryEmoji[goalsCategoryHeaders[i]] || "📌"}
-                  </span>
-                  <span className="font-headline font-bold text-base text-primary">
-                    {goalsCategoryHeaders[i]}
-                  </span>
-                  <div className="flex-1 h-px bg-outline-variant/20" />
-                </div>
-              )}
+          {grouped.map((item, i) => {
+            const isPrivateBlock = item.kind === "private";
+            const isLetterStart =
+              item.kind === "block" &&
+              paper.type === "letter" &&
+              item.block.text.startsWith("안녕");
 
-              {item.kind === "private" ? (
-                <PrivatePlaceholder />
-              ) : (
-                renderBlockByType(paper.type, item.block)
-              )}
-            </motion.div>
-          ))}
+            return (
+              <motion.div
+                key={item.kind === "private" ? item.key : item.block.id}
+                initial={{
+                  opacity: 0,
+                  ...(isPrivateBlock
+                    ? { x: -10 }
+                    : isLetterStart
+                      ? { scale: 1.02, y: 15 }
+                      : { y: 20 }),
+                }}
+                animate={{
+                  opacity: 1,
+                  ...(isPrivateBlock
+                    ? { x: 0 }
+                    : isLetterStart
+                      ? { scale: 1, y: 0 }
+                      : { y: 0 }),
+                }}
+                transition={{
+                  delay: 0.1 + i * 0.05,
+                  type: "spring",
+                  damping: 25,
+                  stiffness: 120,
+                }}
+              >
+                {/* Goals category header */}
+                {goalsCategoryHeaders[i] && (
+                  <div className="mt-4 mb-2 flex items-center gap-2">
+                    <span className="text-xl">
+                      {goalCategoryEmoji[goalsCategoryHeaders[i]] || "📌"}
+                    </span>
+                    <span className="font-headline font-bold text-base text-primary">
+                      {goalsCategoryHeaders[i]}
+                    </span>
+                    <div className="flex-1 h-px bg-outline-variant/20" />
+                  </div>
+                )}
+
+                {isPrivateBlock ? (
+                  <PrivatePlaceholder />
+                ) : (
+                  renderBlockByType(paper.type, item.block)
+                )}
+              </motion.div>
+            );
+          })}
 
           {/* Letter date at end */}
           {paper.type === "letter" && paper.timeline && (
@@ -433,23 +511,17 @@ export default function PaperReaderClient({
         </div>
       </motion.article>
 
-      {/* Emoji divider */}
-      <div className="flex items-center justify-center gap-4 py-8">
-        <span className="text-2xl opacity-40">
-          {(paperDividers[paper.id] || ["·", "·", "·"])[0]}
-        </span>
-        <div className="h-px w-16 bg-outline-variant/30" />
-        <span className="text-2xl opacity-40">
-          {(paperDividers[paper.id] || ["·", "·", "·"])[1]}
-        </span>
-        <div className="h-px w-16 bg-outline-variant/30" />
-        <span className="text-2xl opacity-40">
-          {(paperDividers[paper.id] || ["·", "·", "·"])[2]}
-        </span>
+      {/* Decorative dots divider */}
+      <div className="flex items-center justify-center gap-3 py-6">
+        <div className="w-1.5 h-1.5 rounded-full bg-primary-container" />
+        <div className="h-px w-12 bg-outline-variant/20" />
+        <div className="w-1.5 h-1.5 rounded-full bg-secondary-container" />
+        <div className="h-px w-12 bg-outline-variant/20" />
+        <div className="w-1.5 h-1.5 rounded-full bg-tertiary-container" />
       </div>
 
-      {/* Navigation - simple 3 buttons */}
-      <div className="flex justify-between items-center">
+      {/* Navigation — 3 buttons in one row */}
+      <div className="flex justify-between items-center py-2">
         {prevPaper ? (
           <Link
             href={`/paper/${prevPaper.id}`}
@@ -465,7 +537,7 @@ export default function PaperReaderClient({
           href="/"
           className="w-12 h-12 flex items-center justify-center bg-primary-container rounded-full puffy-shadow hover:scale-110 transition-transform"
         >
-          <span className="text-xl">💌</span>
+          <span className="text-xl">🏠</span>
         </Link>
 
         {nextPaper ? (

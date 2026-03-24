@@ -15,8 +15,9 @@ export default function VaultDashboardClient({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
         {/* Hero Intro Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", damping: 25, stiffness: 120 }}
           className="mb-10 sm:mb-14"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -33,7 +34,7 @@ export default function VaultDashboardClient({
             </div>
 
             {/* Lottie decoration */}
-            <div className="w-28 h-28 sm:w-36 sm:h-36 shrink-0">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 shrink-0">
               <LottieWrapper
                 src="/lottie/sparkle.json"
                 className="w-full h-full"

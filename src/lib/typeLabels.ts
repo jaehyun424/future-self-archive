@@ -9,7 +9,7 @@ export const typeLabelsKo: Record<string, string> = {
 
 export const typeEmoji: Record<string, string> = {
   letter: "💌",
-  checklist: "✅",
+  checklist: "📋",
   imagination: "🌈",
   priorities: "👑",
   goals: "🚀",
@@ -18,7 +18,7 @@ export const typeEmoji: Record<string, string> = {
 
 export const typeGradients: Record<string, { bg: string; emoji: string }> = {
   letter: { bg: "from-pink-200 via-pink-100 to-rose-50", emoji: "💌" },
-  checklist: { bg: "from-emerald-200 via-emerald-100 to-green-50", emoji: "✅" },
+  checklist: { bg: "from-emerald-200 via-emerald-100 to-green-50", emoji: "📋" },
   imagination: { bg: "from-violet-200 via-violet-100 to-purple-50", emoji: "🌈" },
   priorities: { bg: "from-amber-200 via-amber-100 to-yellow-50", emoji: "👑" },
   goals: { bg: "from-sky-200 via-sky-100 to-blue-50", emoji: "🚀" },

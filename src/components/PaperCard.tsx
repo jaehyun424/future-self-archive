@@ -6,16 +6,16 @@ import type { Paper } from "@/lib/types";
 import { paperEmoji } from "@/lib/typeLabels";
 
 const cardBgGradients = [
-  "linear-gradient(135deg, #fff0f5 0%, #ffe8ef 100%)",
-  "linear-gradient(135deg, #fef3e2 0%, #fde8cd 100%)",
-  "linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%)",
-  "linear-gradient(135deg, #f0fff4 0%, #dcffe7 100%)",
-  "linear-gradient(135deg, #fef9f0 0%, #fdf2dc 100%)",
-  "linear-gradient(135deg, #f5f0ff 0%, #ede4ff 100%)",
-  "linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%)",
-  "linear-gradient(135deg, #f0fffe 0%, #dcfff9 100%)",
-  "linear-gradient(135deg, #fff8f0 0%, #ffedd5 100%)",
-  "linear-gradient(135deg, #fdf0ff 0%, #f5dcff 100%)",
+  "linear-gradient(135deg, #fce7f3 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #fef3c7 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #dcfce7 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #ede9fe 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #ffedd5 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #ccfbf1 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #fef9c3 0%, #ffffff 100%)",
+  "linear-gradient(135deg, #f3e8ff 0%, #ffffff 100%)",
 ];
 
 export default function PaperCard({
@@ -41,15 +41,15 @@ export default function PaperCard({
         damping: 25,
         stiffness: 120,
       }}
-      whileTap={{ scale: 0.96 }}
+      whileTap={{ scale: 0.95, rotate: 1 }}
       whileHover={{
-        rotate: [-0.5, 0.5, -0.5, 0],
-        transition: { duration: 0.4, repeat: Infinity },
+        y: -8,
+        transition: { type: "spring", damping: 25, stiffness: 120 },
       }}
     >
       <Link href={href} className="block group">
         <div
-          className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-6 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 active:scale-[0.97] hover:shadow-[0_20px_60px_-8px_rgba(133,77,103,0.18)] overflow-hidden min-h-[180px] sm:min-h-[220px]"
+          className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-6 flex flex-col items-center text-center transition-shadow duration-300 hover:shadow-[0_20px_60px_-8px_rgba(133,77,103,0.18)] overflow-hidden min-h-[180px] sm:min-h-[220px]"
           style={{ background: bgGradient }}
         >
           {/* Icon circle with per-paper emoji */}

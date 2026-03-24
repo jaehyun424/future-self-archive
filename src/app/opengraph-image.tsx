@@ -15,44 +15,143 @@ export default async function OgImage() {
         style={{
           width: "100%",
           height: "100%",
-          background:
-            "linear-gradient(135deg, #fff5f9 0%, #ffd8e6 50%, #fff0f5 100%)",
+          background: "linear-gradient(135deg, #fff0f5 0%, #ffd8e6 50%, #fff5f9 100%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           fontFamily: "Pretendard",
+          position: "relative",
         }}
       >
+        {/* Top left decoration */}
         <div
           style={{
-            fontSize: 72,
-            marginBottom: 24,
+            position: "absolute",
+            top: 40,
+            left: 60,
+            fontSize: 64,
             display: "flex",
-            gap: 16,
+            opacity: 0.6,
           }}
         >
-          📬✨
+          🌸
         </div>
+
+        {/* Top right decoration */}
         <div
           style={{
+            position: "absolute",
+            top: 50,
+            right: 80,
+            fontSize: 52,
+            display: "flex",
+            opacity: 0.5,
+          }}
+        >
+          💕
+        </div>
+
+        {/* Bottom left decoration */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 50,
+            left: 80,
             fontSize: 48,
+            display: "flex",
+            opacity: 0.5,
+          }}
+        >
+          💕
+        </div>
+
+        {/* Bottom right decoration */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 40,
+            right: 60,
+            fontSize: 64,
+            display: "flex",
+            opacity: 0.6,
+          }}
+        >
+          🌸
+        </div>
+
+        {/* Center sparkle */}
+        <div
+          style={{
+            fontSize: 80,
+            marginBottom: 20,
+            display: "flex",
+            gap: 24,
+          }}
+        >
+          ✨
+        </div>
+
+        {/* Main title */}
+        <div
+          style={{
+            fontSize: 56,
             fontWeight: 700,
             color: "#854d67",
             marginBottom: 16,
             display: "flex",
+            textAlign: "center",
           }}
         >
           미래의 나에게 보내는 기록
         </div>
+
+        {/* Subtitle */}
         <div
           style={{
-            fontSize: 22,
+            fontSize: 24,
             color: "#8d6f7a",
             display: "flex",
           }}
         >
           과거에서 온 행복한 메시지가 당신을 기다리고 있어요
+        </div>
+
+        {/* Decorative dots */}
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            marginTop: 32,
+          }}
+        >
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              background: "#ffd8e6",
+              display: "flex",
+            }}
+          />
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              background: "#ede4aa",
+              display: "flex",
+            }}
+          />
+          <div
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              background: "#b2f2bb",
+              display: "flex",
+            }}
+          />
         </div>
       </div>
     ),

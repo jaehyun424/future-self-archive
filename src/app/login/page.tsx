@@ -44,10 +44,10 @@ export default function LoginPage() {
     >
       {/* Decorative background */}
       <div className="absolute top-20 left-10 opacity-15 select-none text-6xl">
-        🤫
+        💭
       </div>
       <div className="absolute bottom-20 right-10 opacity-15 select-none text-7xl rotate-12">
-        ✨
+        🪄
       </div>
 
       <motion.div
@@ -58,7 +58,7 @@ export default function LoginPage() {
       >
         {/* Glassmorphism card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-6 sm:p-8 puffy-shadow relative overflow-hidden">
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-3">
             {/* Icon */}
             <motion.div
               animate={{ rotate: success ? [0, -10, 10, 0] : undefined }}
@@ -75,7 +75,7 @@ export default function LoginPage() {
               <p className="text-sm text-on-surface-variant font-body">
                 {success
                   ? "잠시만 기다려주세요..."
-                  : "비밀번호를 알려줘~ 🤫"}
+                  : "비밀번호를 알려줘~"}
               </p>
             </div>
 
@@ -97,7 +97,7 @@ export default function LoginPage() {
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
-                  className="space-y-4"
+                  className="space-y-3"
                 >
                   <div className="relative">
                     <input
@@ -159,7 +159,7 @@ export default function LoginPage() {
 
         {/* Bottom hint */}
         <p className="text-center text-xs text-outline/50 mt-6">
-          나만 볼 수 있는 비밀 공간 🌙
+          나만 볼 수 있는 비밀 공간
         </p>
       </motion.div>
     </div>

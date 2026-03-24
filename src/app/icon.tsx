@@ -22,13 +22,12 @@ export default function Icon() {
           style={{
             color: "white",
             fontSize: 18,
-            fontWeight: 800,
             lineHeight: 1,
             display: "flex",
             fontFamily: "sans-serif",
           }}
         >
-          F
+          ♥
         </div>
       </div>
     ),
