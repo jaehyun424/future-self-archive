@@ -44,7 +44,7 @@ export default function CoverClient() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, type: "spring", damping: 25, stiffness: 120 }}
-            className="space-y-4 -mt-4"
+            className="space-y-4"
           >
             <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary font-bold leading-tight">
               미래의 나에게 보내는 기록
