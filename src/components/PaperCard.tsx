@@ -51,11 +51,11 @@ export default function PaperCard({
     >
       <Link href={href} className="block group">
         <div
-          className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-3 sm:p-5 flex flex-col items-center text-center transition-shadow duration-300 hover:shadow-[0_20px_60px_-8px_rgba(133,77,103,0.18)] overflow-hidden min-h-[180px] sm:min-h-[220px]"
+          className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-5 flex flex-col items-center text-center transition-shadow duration-300 hover:shadow-[0_20px_60px_-8px_rgba(133,77,103,0.18)] overflow-hidden min-h-[180px] sm:min-h-[220px]"
           style={{ background: bgGradient }}
         >
           {/* Icon circle with per-paper emoji */}
-          <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full bg-white/60 flex items-center justify-center mb-3 shadow-inner backdrop-blur-sm">
+          <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full bg-white/60 flex items-center justify-center mb-2 shadow-inner backdrop-blur-sm">
             <span className="text-3xl sm:text-4xl">{emoji}</span>
           </div>
 

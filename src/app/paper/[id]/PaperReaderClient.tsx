@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import PrivatePlaceholder from "@/components/PrivatePlaceholder";
 import type { Paper, Block } from "@/lib/types";
 import { paperImages } from "@/lib/typeLabels";
@@ -342,45 +342,38 @@ export default function PaperReaderClient({
   prevPaper: Paper | null;
   nextPaper: Paper | null;
 }) {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
   // Group blocks for non-goals types (goals uses paper.blocks directly)
   const grouped = useMemo(
     () => (paper.type !== "goals" ? groupBlocks(paper.blocks) : []),
     [paper.blocks, paper.type]
   );
 
-  // Goals category headers — handle private blocks by looking ahead
+  // Goals category headers — evenly distribute categories across blocks
   const goalsCategoryHeaders = useMemo(() => {
     if (paper.type !== "goals") return {};
     const map: Record<number, string> = {};
-    let lastCategory: string | null = null;
 
-    for (let idx = 0; idx < paper.blocks.length; idx++) {
-      const block = paper.blocks[idx];
+    // Extract category order from public blocks
+    const categories: string[] = [];
+    for (const block of paper.blocks) {
       if (!block.isPrivate && isGoalHeading(block.text)) {
         const cat = getGoalCategory(block.text);
-        if (cat && cat !== lastCategory) {
-          map[idx] = cat;
-          lastCategory = cat;
-        } else if (cat) {
-          lastCategory = cat;
-        }
-      } else if (block.isPrivate) {
-        // For private blocks, look ahead to the next public block's category
-        let nextCat: string | null = null;
-        for (let j = idx + 1; j < paper.blocks.length; j++) {
-          if (!paper.blocks[j].isPrivate && isGoalHeading(paper.blocks[j].text)) {
-            nextCat = getGoalCategory(paper.blocks[j].text);
-            break;
-          }
-        }
-        if (nextCat && nextCat !== lastCategory) {
-          map[idx] = nextCat;
-          lastCategory = nextCat;
-        }
+        if (cat && !categories.includes(cat)) categories.push(cat);
       }
     }
+
+    if (categories.length === 0) return map;
+
+    // Each category has the same number of blocks (3 each)
+    const perCat = Math.ceil(paper.blocks.length / categories.length);
+
+    for (let c = 0; c < categories.length; c++) {
+      const startIdx = c * perCat;
+      if (startIdx < paper.blocks.length) {
+        map[startIdx] = categories[c];
+      }
+    }
+
     return map;
   }, [paper.blocks, paper.type]);
 
@@ -398,8 +391,7 @@ export default function PaperReaderClient({
           <img
             src={paperImages[paper.id]}
             alt=""
-            className={`w-full h-auto max-h-[300px] object-contain transition-[filter] duration-600 ${imageLoaded ? "" : "blur-lg"}`}
-            onLoad={() => setImageLoaded(true)}
+            className="w-full h-48 sm:h-56 md:h-64 object-cover"
           />
         </div>
 
@@ -543,35 +535,35 @@ export default function PaperReaderClient({
         </div>
       </motion.article>
 
-      {/* Navigation — 3 buttons compact row */}
-      <div className="flex items-center justify-between py-8 px-2">
+      {/* Navigation */}
+      <div className="flex items-center justify-between py-6">
         {prevPaper ? (
           <Link
             href={`/paper/${prevPaper.id}`}
-            className="px-4 py-2 text-sm font-bold text-primary bg-white rounded-full puffy-shadow hover:-translate-y-1 transition-all"
+            className="px-5 py-2.5 text-sm font-bold text-primary bg-white rounded-full puffy-shadow active:scale-95 transition-transform"
           >
             ← 이전
           </Link>
         ) : (
-          <div className="w-20" />
+          <div className="w-[76px]" />
         )}
 
         <Link
           href="/"
-          className="w-11 h-11 flex items-center justify-center bg-primary-container rounded-full puffy-shadow hover:scale-110 transition-transform"
+          className="w-12 h-12 flex items-center justify-center bg-primary-container rounded-full puffy-shadow active:scale-95 transition-transform"
         >
-          🏠
+          <span className="text-lg">🏠</span>
         </Link>
 
         {nextPaper ? (
           <Link
             href={`/paper/${nextPaper.id}`}
-            className="px-4 py-2 text-sm font-bold text-primary bg-white rounded-full puffy-shadow hover:-translate-y-1 transition-all"
+            className="px-5 py-2.5 text-sm font-bold text-primary bg-white rounded-full puffy-shadow active:scale-95 transition-transform"
           >
             다음 →
           </Link>
         ) : (
-          <div className="w-20" />
+          <div className="w-[76px]" />
         )}
       </div>
     </div>

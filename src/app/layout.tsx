@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     title: "미래의 나에게 보내는 기록",
     description: "과거에서 온 행복한 메시지가 당신을 기다리고 있어요",
     type: "website",
+    images: [{ url: "/opengraph-image?v=2", width: 1200, height: 630 }],
   },
 };
 

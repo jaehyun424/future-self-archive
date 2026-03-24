@@ -95,11 +95,11 @@ export default function LoginPage() {
               <h1 className="font-headline font-extrabold text-2xl text-primary mb-2">
                 {success ? "환영합니다!" : "비밀이야~"}
               </h1>
-              <p className="text-sm text-on-surface-variant font-body">
-                {success
-                  ? "잠시만 기다려주세요..."
-                  : "비밀번호를 알려줘~"}
-              </p>
+              {success && (
+                <p className="text-sm text-on-surface-variant font-body">
+                  잠시만 기다려주세요...
+                </p>
+              )}
             </div>
 
             <AnimatePresence mode="wait">
