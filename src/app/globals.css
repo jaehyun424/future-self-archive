@@ -1,26 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,800&family=Noto+Serif+KR:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-primary: #854d67;
+  --color-primary-container: #ffd8e6;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #6a364f;
+  --color-secondary: #665f31;
+  --color-secondary-container: #ede4aa;
+  --color-on-secondary-container: #4d471c;
+  --color-tertiary: #2f6a3f;
+  --color-tertiary-container: #b2f2bb;
+  --color-on-tertiary-container: #145129;
+  --color-surface: #f8f9fa;
+  --color-surface-container: #edeeef;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e7e8e9;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #593f4a;
+  --color-outline: #8d6f7a;
+  --color-outline-variant: #e1bdca;
+  --color-error: #ba1a1a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-headline: 'Plus Jakarta Sans', 'Pretendard', 'Noto Serif KR', sans-serif;
+  --font-body: 'Pretendard', 'Manrope', sans-serif;
+  --font-serif: 'Noto Serif KR', serif;
+
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Pretendard', 'Manrope', sans-serif;
+  background-color: #f8f9fa;
+  color: #191c1d;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  line-height: 1;
+}
+
+.puffy-shadow {
+  box-shadow: 0 12px 40px -4px rgba(133, 77, 103, 0.12);
+}
+
+.bg-sticker-texture {
+  background-image: radial-gradient(#FFB7D5 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+}
+
+.bg-vault-texture {
+  background-color: #fcfaf2;
+  background-image: radial-gradient(#ffd8e6 0.5px, transparent 0.5px), radial-gradient(#b2f2bb 0.5px, #fcfaf2 0.5px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+.washi-tape {
+  background-color: #ede4aa;
+  opacity: 0.8;
+  transform: rotate(-3deg);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1bdca;
+  border-radius: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: #ffd8e6;
+  color: #6a364f;
+}
+
+.font-headline {
+  font-family: 'Plus Jakarta Sans', 'Pretendard', 'Noto Serif KR', sans-serif;
+}
+
+.font-body {
+  font-family: 'Pretendard', 'Manrope', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Noto Serif KR', serif;
+}
+
+@keyframes float-hearts {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+  50% { transform: translateY(-20px) rotate(10deg); opacity: 0.4; }
+}
+
+.animate-float {
+  animation: float-hearts 6s ease-in-out infinite;
 }
