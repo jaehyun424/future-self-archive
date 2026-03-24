@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import PrivateHighlight from "@/components/PrivateHighlight";
-import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
 import { typeLabelsKo, paperEmoji, paperImages } from "@/lib/typeLabels";
 
@@ -320,7 +319,8 @@ export default function VaultReaderClient({
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Goals category headers — check ALL blocks since vault shows everything
+  // Goals category headers — check ALL blocks including private (vault has full text)
+  // Also handle edge case where private block text might be stripped
   const goalsCategoryHeaders = useMemo(() => {
     if (paper.type !== "goals") return {};
     const map: Record<number, string> = {};
@@ -336,6 +336,19 @@ export default function VaultReaderClient({
         } else if (cat) {
           lastCategory = cat;
         }
+      } else if (block.isPrivate && !isGoalHeading(block.text)) {
+        // Private block without recognizable heading — look ahead
+        let nextCat: string | null = null;
+        for (let j = idx + 1; j < paper.blocks.length; j++) {
+          if (isGoalHeading(paper.blocks[j].text)) {
+            nextCat = getGoalCategory(paper.blocks[j].text);
+            break;
+          }
+        }
+        if (nextCat && nextCat !== lastCategory) {
+          map[idx] = nextCat;
+          lastCategory = nextCat;
+        }
       }
     }
     return map;
@@ -348,21 +361,26 @@ export default function VaultReaderClient({
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", damping: 25, stiffness: 120 }}
+          transition={{ type: "spring", damping: 20, stiffness: 100 }}
           className="relative mb-8 sm:mb-12"
         >
-          {/* Hero image — full view, no crop */}
+          {/* Hero image */}
           <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
             <img
               src={paperImages[paper.id]}
               alt=""
-              className={`w-full h-auto max-h-[300px] object-contain transition-[filter] duration-500 ${imageLoaded ? "" : "blur-lg"}`}
+              className={`w-full h-auto max-h-[300px] object-contain transition-[filter] duration-600 ${imageLoaded ? "" : "blur-lg"}`}
               onLoad={() => setImageLoaded(true)}
             />
           </div>
 
           {/* Title */}
-          <div className="text-center space-y-3">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, type: "spring", damping: 25, stiffness: 120 }}
+            className="text-center space-y-3"
+          >
             <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
               {paper.subtitle}
             </div>
@@ -374,17 +392,17 @@ export default function VaultReaderClient({
                 {paper.timeline}
               </p>
             )}
-          </div>
+          </motion.div>
         </motion.section>
 
-        {/* Lottie sparkle */}
-        <div className="flex justify-center mb-6">
-          <LottieWrapper
-            src="/lottie/sparkle.json"
-            className="w-16 h-16 opacity-60"
-            fallbackEmoji="✨"
-          />
-        </div>
+        {/* Sparkle emoji (replaces Lottie) */}
+        <motion.div
+          className="flex justify-center mb-6"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 8, -8, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <span className="text-3xl opacity-60">✨</span>
+        </motion.div>
 
         {/* Content */}
         <motion.article
@@ -489,7 +507,7 @@ export default function VaultReaderClient({
           </div>
         </motion.article>
 
-        {/* Navigation — 3 buttons in one row */}
+        {/* Navigation — 3 buttons compact row */}
         <div className="flex items-center justify-between py-8 px-2">
           {prevPaper ? (
             <Link

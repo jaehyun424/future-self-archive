@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "Future Self Archive — 미래의 나에게 보내는 기록",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full flex flex-col text-on-surface font-body">
+        <ScrollToTop />
         <Navigation />
         <main className="flex-1 relative z-10">{children}</main>
         <footer className="text-center py-8 text-xs text-outline/60 font-body relative z-10">

@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import PaperCard from "@/components/PaperCard";
-import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper } from "@/lib/types";
 
 export default function VaultDashboardClient({
@@ -33,14 +32,14 @@ export default function VaultDashboardClient({
               </p>
             </div>
 
-            {/* Lottie decoration */}
-            <div className="w-32 h-32 sm:w-40 sm:h-40 shrink-0">
-              <LottieWrapper
-                src="/lottie/sparkle.json"
-                className="w-full h-full"
-                fallbackEmoji="✨"
-              />
-            </div>
+            {/* Sparkle emoji decoration (replaces Lottie) */}
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="text-6xl sm:text-7xl shrink-0"
+            >
+              ✨
+            </motion.div>
           </div>
 
           {/* Stats bar */}

@@ -11,18 +11,21 @@ const floatingItems: {
   duration: number;
   size: string;
 }[] = [
-  { emoji: "🌸", top: "4%", left: "3%", delay: 0, duration: 6, size: "text-4xl" },
-  { emoji: "🦋", top: "15%", right: "5%", delay: 1, duration: 7, size: "text-5xl" },
-  { emoji: "🎀", top: "28%", left: "2%", delay: 2, duration: 5.5, size: "text-3xl" },
-  { emoji: "🍰", top: "42%", right: "3%", delay: 0.5, duration: 8, size: "text-4xl" },
-  { emoji: "🧸", top: "55%", left: "4%", delay: 1.5, duration: 6.5, size: "text-5xl" },
-  { emoji: "🌷", top: "68%", right: "6%", delay: 3, duration: 7.5, size: "text-4xl" },
-  { emoji: "💕", top: "80%", left: "8%", delay: 2.5, duration: 5.5, size: "text-3xl" },
-  { emoji: "🍬", top: "10%", left: "88%", delay: 0.8, duration: 6.8, size: "text-4xl" },
-  { emoji: "🍭", top: "38%", right: "2%", delay: 1.8, duration: 7.2, size: "text-3xl" },
-  { emoji: "🪷", top: "90%", right: "10%", delay: 2.2, duration: 6.2, size: "text-5xl" },
-  { emoji: "🌺", top: "22%", left: "50%", delay: 0.3, duration: 6.4, size: "text-4xl" },
-  { emoji: "🐱", top: "72%", right: "45%", delay: 1.2, duration: 7.8, size: "text-5xl" },
+  { emoji: "🌸", top: "3%", left: "2%", delay: 0, duration: 6, size: "text-5xl" },
+  { emoji: "🦋", top: "12%", right: "4%", delay: 0.8, duration: 7, size: "text-5xl" },
+  { emoji: "🎀", top: "25%", left: "3%", delay: 1.5, duration: 5.5, size: "text-4xl" },
+  { emoji: "🍰", top: "38%", right: "2%", delay: 0.3, duration: 8, size: "text-5xl" },
+  { emoji: "🧸", top: "50%", left: "4%", delay: 1.2, duration: 6.5, size: "text-5xl" },
+  { emoji: "🌷", top: "62%", right: "5%", delay: 2.5, duration: 7.5, size: "text-5xl" },
+  { emoji: "🍬", top: "8%", left: "85%", delay: 0.6, duration: 6.8, size: "text-4xl" },
+  { emoji: "🍭", top: "33%", right: "1%", delay: 1.8, duration: 7.2, size: "text-4xl" },
+  { emoji: "🪷", top: "85%", right: "8%", delay: 2.2, duration: 6.2, size: "text-5xl" },
+  { emoji: "🌺", top: "18%", left: "48%", delay: 0.2, duration: 6.4, size: "text-4xl" },
+  { emoji: "🐱", top: "70%", right: "42%", delay: 1.0, duration: 7.8, size: "text-5xl" },
+  { emoji: "💕", top: "78%", left: "6%", delay: 2.0, duration: 5.5, size: "text-4xl" },
+  { emoji: "🎠", top: "45%", left: "90%", delay: 3.0, duration: 7.0, size: "text-4xl" },
+  { emoji: "🧁", top: "92%", left: "30%", delay: 1.6, duration: 6.6, size: "text-5xl" },
+  { emoji: "🌈", top: "58%", left: "50%", delay: 0.9, duration: 8.2, size: "text-4xl" },
 ];
 
 export default function FloatingDecorations() {
@@ -34,8 +37,8 @@ export default function FloatingDecorations() {
           className={`absolute ${item.size} opacity-25 select-none`}
           style={{ top: item.top, left: item.left, right: item.right }}
           animate={{
-            y: [-14, 14, -14],
-            rotate: [-10, 10, -10],
+            y: [-16, 16, -16],
+            rotate: [-12, 12, -12],
             opacity: [0.15, 0.4, 0.15],
           }}
           transition={{

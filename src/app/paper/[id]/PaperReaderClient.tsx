@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import PrivatePlaceholder from "@/components/PrivatePlaceholder";
-import LottieWrapper from "@/components/LottieWrapper";
 import type { Paper, Block } from "@/lib/types";
 import { paperImages } from "@/lib/typeLabels";
 
@@ -351,20 +350,35 @@ export default function PaperReaderClient({
     [paper.blocks, paper.type]
   );
 
-  // Goals category headers — only check public blocks for category changes
+  // Goals category headers — handle private blocks by looking ahead
   const goalsCategoryHeaders = useMemo(() => {
     if (paper.type !== "goals") return {};
     const map: Record<number, string> = {};
-    let lastPublicCategory: string | null = null;
+    let lastCategory: string | null = null;
 
     for (let idx = 0; idx < paper.blocks.length; idx++) {
       const block = paper.blocks[idx];
       if (!block.isPrivate && isGoalHeading(block.text)) {
         const cat = getGoalCategory(block.text);
-        if (cat && cat !== lastPublicCategory) {
+        if (cat && cat !== lastCategory) {
           map[idx] = cat;
+          lastCategory = cat;
+        } else if (cat) {
+          lastCategory = cat;
         }
-        if (cat) lastPublicCategory = cat;
+      } else if (block.isPrivate) {
+        // For private blocks, look ahead to the next public block's category
+        let nextCat: string | null = null;
+        for (let j = idx + 1; j < paper.blocks.length; j++) {
+          if (!paper.blocks[j].isPrivate && isGoalHeading(paper.blocks[j].text)) {
+            nextCat = getGoalCategory(paper.blocks[j].text);
+            break;
+          }
+        }
+        if (nextCat && nextCat !== lastCategory) {
+          map[idx] = nextCat;
+          lastCategory = nextCat;
+        }
       }
     }
     return map;
@@ -376,21 +390,26 @@ export default function PaperReaderClient({
       <motion.section
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 120 }}
+        transition={{ type: "spring", damping: 20, stiffness: 100 }}
         className="relative mb-8 sm:mb-12"
       >
-        {/* Hero image — full view, no crop */}
+        {/* Hero image */}
         <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
           <img
             src={paperImages[paper.id]}
             alt=""
-            className={`w-full h-auto max-h-[300px] object-contain transition-[filter] duration-500 ${imageLoaded ? "" : "blur-lg"}`}
+            className={`w-full h-auto max-h-[300px] object-contain transition-[filter] duration-600 ${imageLoaded ? "" : "blur-lg"}`}
             onLoad={() => setImageLoaded(true)}
           />
         </div>
 
         {/* Title */}
-        <div className="text-center space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, type: "spring", damping: 25, stiffness: 120 }}
+          className="text-center space-y-3"
+        >
           <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
             {paper.subtitle}
           </div>
@@ -402,17 +421,17 @@ export default function PaperReaderClient({
               {paper.timeline}
             </p>
           )}
-        </div>
+        </motion.div>
       </motion.section>
 
-      {/* Lottie envelope */}
-      <div className="flex justify-center mb-6">
-        <LottieWrapper
-          src="/lottie/envelope.json"
-          className="w-20 h-20 opacity-70"
-          fallbackEmoji="📬"
-        />
-      </div>
+      {/* Envelope emoji (replaces Lottie) */}
+      <motion.div
+        className="flex justify-center mb-6"
+        animate={{ y: [0, -6, 0], rotate: [0, 5, -5, 0] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <span className="text-4xl opacity-70">💌</span>
+      </motion.div>
 
       {/* Content */}
       <motion.article
@@ -524,7 +543,7 @@ export default function PaperReaderClient({
         </div>
       </motion.article>
 
-      {/* Navigation — 3 buttons in one row */}
+      {/* Navigation — 3 buttons compact row */}
       <div className="flex items-center justify-between py-8 px-2">
         {prevPaper ? (
           <Link

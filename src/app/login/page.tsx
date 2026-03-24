@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import LottieWrapper from "@/components/LottieWrapper";
+
+const confettiEmojis = ["🎉", "🎊", "✨", "💖", "🌸", "🎀", "🍰", "🦋"];
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
@@ -56,6 +57,28 @@ export default function LoginPage() {
         transition={{ type: "spring", damping: 25, stiffness: 120 }}
         className="w-full max-w-sm relative"
       >
+        {/* Confetti burst on success */}
+        <AnimatePresence>
+          {success &&
+            confettiEmojis.map((emoji, i) => (
+              <motion.div
+                key={`confetti-${i}`}
+                initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
+                animate={{
+                  opacity: [1, 1, 0],
+                  scale: [0, 1.2, 0.8],
+                  x: (i % 2 === 0 ? -1 : 1) * (40 + Math.random() * 60),
+                  y: -(60 + Math.random() * 80),
+                  rotate: Math.random() * 360,
+                }}
+                transition={{ duration: 1.2, delay: i * 0.08, ease: "easeOut" }}
+                className="absolute top-1/3 left-1/2 text-2xl pointer-events-none z-20"
+              >
+                {emoji}
+              </motion.div>
+            ))}
+        </AnimatePresence>
+
         {/* Glassmorphism card */}
         <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-6 sm:p-8 puffy-shadow relative overflow-hidden">
           <div className="text-center space-y-3">
@@ -85,13 +108,15 @@ export default function LoginPage() {
                   key="success"
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="py-4"
+                  className="py-6"
                 >
-                  <LottieWrapper
-                    src="/lottie/success.json"
-                    className="w-32 h-32 mx-auto"
-                    loop={false}
-                  />
+                  <motion.div
+                    animate={{ scale: [1, 1.3, 1], rotate: [0, 15, -15, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="text-7xl"
+                  >
+                    🎉
+                  </motion.div>
                 </motion.div>
               ) : (
                 <motion.form

@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import PaperCard from "@/components/PaperCard";
-import LottieWrapper from "@/components/LottieWrapper";
 import FloatingDecorations from "@/components/FloatingDecorations";
 import type { Paper } from "@/lib/types";
 
@@ -30,13 +29,14 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
             </div>
           </motion.div>
 
-          {/* Lottie sparkle - bigger */}
-          <div className="w-40 h-40 sm:w-48 sm:h-48 pointer-events-none -mt-4">
-            <LottieWrapper
-              src="/lottie/sparkle.json"
-              className="w-full h-full"
-            />
-          </div>
+          {/* Sparkle emoji animation (replaces Lottie) */}
+          <motion.div
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="text-5xl -mt-4 pointer-events-none"
+          >
+            ✨
+          </motion.div>
 
           {/* Typography */}
           <motion.div
@@ -54,7 +54,7 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
               <br className="sm:hidden" /> 당신을 기다리고 있어요
             </p>
             <p className="text-sm text-outline font-body max-w-md mx-auto">
-              {"(벤저민 하디 '퓨처 셀프' 워크지를 바탕으로 작성한 기록)"}
+              {"(벤저민 하디 '퓨처 셀프' 워크지를 바탕으로 작성한 내용)"}
             </p>
           </motion.div>
         </div>
