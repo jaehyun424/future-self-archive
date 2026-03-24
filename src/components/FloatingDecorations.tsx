@@ -9,17 +9,20 @@ const floatingItems: {
   right?: string;
   delay: number;
   duration: number;
+  size: string;
 }[] = [
-  { emoji: "🌸", top: "6%", left: "3%", delay: 0, duration: 6 },
-  { emoji: "🦋", top: "18%", right: "5%", delay: 1, duration: 7 },
-  { emoji: "🎀", top: "32%", left: "2%", delay: 2, duration: 5.5 },
-  { emoji: "🍰", top: "50%", right: "3%", delay: 0.5, duration: 8 },
-  { emoji: "🧸", top: "65%", left: "4%", delay: 1.5, duration: 6.5 },
-  { emoji: "🌷", top: "78%", right: "6%", delay: 3, duration: 7.5 },
-  { emoji: "💫", top: "88%", left: "8%", delay: 2.5, duration: 5.5 },
-  { emoji: "🍬", top: "12%", left: "88%", delay: 0.8, duration: 6.8 },
-  { emoji: "🍭", top: "42%", right: "2%", delay: 1.8, duration: 7.2 },
-  { emoji: "🪷", top: "92%", right: "10%", delay: 2.2, duration: 6.2 },
+  { emoji: "🌸", top: "4%", left: "3%", delay: 0, duration: 6, size: "text-4xl" },
+  { emoji: "🦋", top: "15%", right: "5%", delay: 1, duration: 7, size: "text-5xl" },
+  { emoji: "🎀", top: "28%", left: "2%", delay: 2, duration: 5.5, size: "text-3xl" },
+  { emoji: "🍰", top: "42%", right: "3%", delay: 0.5, duration: 8, size: "text-4xl" },
+  { emoji: "🧸", top: "55%", left: "4%", delay: 1.5, duration: 6.5, size: "text-5xl" },
+  { emoji: "🌷", top: "68%", right: "6%", delay: 3, duration: 7.5, size: "text-4xl" },
+  { emoji: "💕", top: "80%", left: "8%", delay: 2.5, duration: 5.5, size: "text-3xl" },
+  { emoji: "🍬", top: "10%", left: "88%", delay: 0.8, duration: 6.8, size: "text-4xl" },
+  { emoji: "🍭", top: "38%", right: "2%", delay: 1.8, duration: 7.2, size: "text-3xl" },
+  { emoji: "🪷", top: "90%", right: "10%", delay: 2.2, duration: 6.2, size: "text-5xl" },
+  { emoji: "🌺", top: "22%", left: "50%", delay: 0.3, duration: 6.4, size: "text-4xl" },
+  { emoji: "🐱", top: "72%", right: "45%", delay: 1.2, duration: 7.8, size: "text-5xl" },
 ];
 
 export default function FloatingDecorations() {
@@ -28,7 +31,7 @@ export default function FloatingDecorations() {
       {floatingItems.map((item, i) => (
         <motion.div
           key={i}
-          className="absolute text-3xl sm:text-4xl opacity-25 select-none"
+          className={`absolute ${item.size} opacity-25 select-none`}
           style={{ top: item.top, left: item.left, right: item.right }}
           animate={{
             y: [-14, 14, -14],

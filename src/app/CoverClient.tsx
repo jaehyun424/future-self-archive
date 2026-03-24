@@ -62,7 +62,7 @@ export default function CoverClient({ papers }: { papers: Paper[] }) {
 
       {/* Papers Grid Section */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {papers.map((paper, index) => (
             <PaperCard key={paper.id} paper={paper} index={index} />
           ))}

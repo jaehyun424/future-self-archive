@@ -65,7 +65,7 @@ export default function LoginPage() {
               transition={{ duration: 0.5 }}
               className="text-5xl"
             >
-              {success ? "🎉" : "🤫"}
+              {success ? "🎉" : "🐱"}
             </motion.div>
 
             <div>
@@ -159,7 +159,7 @@ export default function LoginPage() {
 
         {/* Bottom hint */}
         <p className="text-center text-xs text-outline/50 mt-6">
-          나만 볼 수 있는 비밀 공간
+          🐾 나만 볼 수 있는 비밀 공간
         </p>
       </motion.div>
     </div>

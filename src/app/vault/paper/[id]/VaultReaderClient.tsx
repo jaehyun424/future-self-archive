@@ -320,7 +320,7 @@ export default function VaultReaderClient({
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Pre-compute category headers for goals
+  // Goals category headers — check ALL blocks since vault shows everything
   const goalsCategoryHeaders = useMemo(() => {
     if (paper.type !== "goals") return {};
     const map: Record<number, string> = {};
@@ -346,17 +346,17 @@ export default function VaultReaderClient({
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Hero Header */}
         <motion.section
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 120 }}
           className="relative mb-8 sm:mb-12"
         >
-          {/* Hero image — fixed height, no crop */}
-          <div className="relative w-full h-48 sm:h-56 md:h-64 rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+          {/* Hero image — full view, no crop */}
+          <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
             <img
               src={paperImages[paper.id]}
               alt=""
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-[filter] duration-500 ${imageLoaded ? "" : "blur-sm"}`}
+              className={`w-full h-auto max-h-[300px] object-contain transition-[filter] duration-500 ${imageLoaded ? "" : "blur-lg"}`}
               onLoad={() => setImageLoaded(true)}
             />
           </div>
@@ -434,9 +434,9 @@ export default function VaultReaderClient({
                   initial={{
                     opacity: 0,
                     ...(isPrivateBlock
-                      ? { x: -10 }
+                      ? { x: -15 }
                       : isLetterStart
-                        ? { scale: 1.02, y: 15 }
+                        ? { scale: 1.03, y: 15 }
                         : { y: 20 }),
                   }}
                   animate={{
@@ -480,51 +480,44 @@ export default function VaultReaderClient({
 
             {/* Letter date at end */}
             {paper.type === "letter" && paper.timeline && (
-              <p className="text-right text-sm text-outline italic font-serif mt-8">
-                {paper.timeline.split("→")[0].trim()}
-              </p>
+              <div className="text-right mt-8">
+                <p className="text-sm text-outline italic font-serif">
+                  🌸 {paper.timeline.split("→")[0].trim()} 🌸
+                </p>
+              </div>
             )}
           </div>
         </motion.article>
 
-        {/* Decorative dots divider */}
-        <div className="flex items-center justify-center gap-3 py-6">
-          <div className="w-1.5 h-1.5 rounded-full bg-primary-container" />
-          <div className="h-px w-12 bg-outline-variant/20" />
-          <div className="w-1.5 h-1.5 rounded-full bg-secondary-container" />
-          <div className="h-px w-12 bg-outline-variant/20" />
-          <div className="w-1.5 h-1.5 rounded-full bg-tertiary-container" />
-        </div>
-
         {/* Navigation — 3 buttons in one row */}
-        <div className="flex justify-between items-center py-2">
+        <div className="flex items-center justify-between py-8 px-2">
           {prevPaper ? (
             <Link
               href={`/vault/paper/${prevPaper.id}`}
-              className="px-5 py-2.5 bg-white rounded-full puffy-shadow text-sm font-bold text-on-surface hover:-translate-y-1 transition-all"
+              className="px-4 py-2 text-sm font-bold text-primary bg-white rounded-full puffy-shadow hover:-translate-y-1 transition-all"
             >
               ← 이전
             </Link>
           ) : (
-            <div />
+            <div className="w-20" />
           )}
 
           <Link
             href="/vault"
-            className="w-12 h-12 flex items-center justify-center bg-tertiary-container rounded-full puffy-shadow hover:scale-110 transition-transform shrink-0"
+            className="w-11 h-11 flex items-center justify-center bg-tertiary-container rounded-full puffy-shadow hover:scale-110 transition-transform"
           >
-            <span className="text-xl">🏠</span>
+            🏠
           </Link>
 
           {nextPaper ? (
             <Link
               href={`/vault/paper/${nextPaper.id}`}
-              className="px-5 py-2.5 bg-white rounded-full puffy-shadow text-sm font-bold text-on-surface hover:-translate-y-1 transition-all"
+              className="px-4 py-2 text-sm font-bold text-primary bg-white rounded-full puffy-shadow hover:-translate-y-1 transition-all"
             >
               다음 →
             </Link>
           ) : (
-            <div />
+            <div className="w-20" />
           )}
         </div>
       </div>
