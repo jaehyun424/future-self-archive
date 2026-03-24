@@ -2,28 +2,289 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import PrivatePlaceholder from "@/components/PrivatePlaceholder";
 import LottieWrapper from "@/components/LottieWrapper";
-import type { Paper } from "@/lib/types";
+import type { Paper, Block } from "@/lib/types";
+import { typeLabelsKo, typeEmoji, typeGradients } from "@/lib/typeLabels";
+import { useMemo } from "react";
 
-const typeImages: Record<string, string> = {
-  letter: "/images/letter-writing.jpg",
-  checklist: "/images/mountain-stars.jpg",
-  imagination: "/images/pastel-clouds.jpg",
-  priorities: "/images/sunrise-person.jpg",
-  goals: "/images/landscape.jpg",
-  steps: "/images/cozy-desk.jpg",
-};
+type GroupedBlock =
+  | { kind: "private"; count: number; key: string }
+  | { kind: "block"; block: Block; index: number };
 
-const typeEmoji: Record<string, string> = {
-  letter: "💌",
-  checklist: "✅",
-  imagination: "🌈",
-  priorities: "👑",
-  goals: "🚀",
-  steps: "🧭",
-};
+function groupBlocks(blocks: Block[]): GroupedBlock[] {
+  const result: GroupedBlock[] = [];
+  let i = 0;
+  while (i < blocks.length) {
+    if (blocks[i].isPrivate) {
+      let count = 0;
+      const key = blocks[i].id;
+      while (i < blocks.length && blocks[i].isPrivate) {
+        count++;
+        i++;
+      }
+      result.push({ kind: "private", count, key });
+    } else {
+      result.push({ kind: "block", block: blocks[i], index: i });
+      i++;
+    }
+  }
+  return result;
+}
+
+function isHeadingPattern(text: string): boolean {
+  return /^(위협 \d+:|진실 \d+:|우선순위 \d+:|창업 목표 \d+:|정치 목표 \d+:|가족 목표 \d+:|\d+단계:)/.test(text);
+}
+
+function isPriorityHeading(text: string): boolean {
+  return /^우선순위 \d+:/.test(text);
+}
+
+function isGoalHeading(text: string): boolean {
+  return /^(창업|정치|가족) 목표 \d+:/.test(text);
+}
+
+function isStepHeading(text: string): boolean {
+  return /^\d+단계:/.test(text);
+}
+
+function getGoalCategory(text: string): string | null {
+  const match = text.match(/^(창업|정치|가족) 목표/);
+  return match ? match[1] : null;
+}
+
+function renderLetterBlock(block: Block) {
+  if (block.text.startsWith("##")) {
+    return (
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <span className="text-primary-container text-lg">✦</span>
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
+          {block.text.replace(/^##\s*/, "")}
+        </h2>
+      </div>
+    );
+  }
+  // First line of a letter (starts with "안녕") - make it bigger and serif
+  if (block.text.startsWith("안녕")) {
+    return (
+      <p className="font-serif text-lg sm:text-xl leading-[1.75] text-on-surface font-bold">
+        {block.text}
+      </p>
+    );
+  }
+  return (
+    <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+      {block.text}
+    </p>
+  );
+}
+
+function renderChecklistBlock(block: Block) {
+  if (block.text.startsWith("##")) {
+    return (
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <span className="text-primary-container text-lg">✦</span>
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
+          {block.text.replace(/^##\s*/, "")}
+        </h2>
+      </div>
+    );
+  }
+  if (isHeadingPattern(block.text)) {
+    return (
+      <div className="border-l-4 border-primary/40 pl-4 py-2 bg-primary-container/10 rounded-r-xl">
+        <p className="font-headline font-bold text-base sm:text-lg text-primary">
+          {block.text}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant pl-5">
+      {block.text}
+    </p>
+  );
+}
+
+function renderImaginationBlock(block: Block) {
+  if (block.text.startsWith("##")) {
+    const headingText = block.text.replace(/^##\s*/, "");
+    const isPast = headingText.includes("10년 전");
+    return (
+      <div className="pt-6">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="text-3xl">{isPast ? "🔍" : "🔮"}</span>
+        </div>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
+          {headingText}
+        </h2>
+      </div>
+    );
+  }
+  return (
+    <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+      {block.text}
+    </p>
+  );
+}
+
+function renderPrioritiesBlock(block: Block) {
+  if (block.text.startsWith("##")) {
+    return (
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <span className="text-primary-container text-lg">✦</span>
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
+          {block.text.replace(/^##\s*/, "")}
+        </h2>
+      </div>
+    );
+  }
+  if (isPriorityHeading(block.text)) {
+    const match = block.text.match(/^우선순위 (\d+):\s*(.*)/);
+    if (match) {
+      return (
+        <div className="flex items-start gap-4 py-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-200 to-yellow-100 flex items-center justify-center shrink-0 shadow-md">
+            <span className="font-headline font-extrabold text-lg sm:text-xl text-amber-800">{match[1]}</span>
+          </div>
+          <div className="pt-1">
+            <p className="font-headline font-bold text-lg sm:text-xl text-on-surface">{match[2]}</p>
+          </div>
+        </div>
+      );
+    }
+  }
+  return (
+    <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+      {block.text}
+    </p>
+  );
+}
+
+function renderGoalsBlock(block: Block, prevBlock?: Block) {
+  if (block.text.startsWith("##")) {
+    return (
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <span className="text-primary-container text-lg">✦</span>
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
+          {block.text.replace(/^##\s*/, "")}
+        </h2>
+      </div>
+    );
+  }
+  if (isGoalHeading(block.text)) {
+    const category = getGoalCategory(block.text);
+    const categoryEmoji: Record<string, string> = { "창업": "🚀", "정치": "🏛️", "가족": "👨‍👩‍👧" };
+    const needsCategoryLabel = !prevBlock || getGoalCategory(prevBlock.text) !== category;
+    const goalText = block.text.replace(/^(창업|정치|가족) 목표 \d+:\s*/, "");
+    const goalNum = block.text.match(/목표 (\d+)/)?.[1];
+    return (
+      <>
+        {needsCategoryLabel && category && (
+          <div className="mt-4 mb-2 flex items-center gap-2">
+            <span className="text-xl">{categoryEmoji[category] || "📌"}</span>
+            <span className="font-headline font-bold text-base text-primary">{category}</span>
+            <div className="flex-1 h-px bg-outline-variant/20" />
+          </div>
+        )}
+        <div className="flex items-start gap-3 py-1.5 pl-2">
+          <span className="text-sm mt-0.5">☐</span>
+          <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+            <span className="text-xs text-outline mr-1">목표{goalNum}</span>
+            {goalText}
+          </p>
+        </div>
+      </>
+    );
+  }
+  return (
+    <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
+      {block.text}
+    </p>
+  );
+}
+
+function renderStepsBlock(block: Block) {
+  if (block.text.startsWith("##")) {
+    return (
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-outline-variant/30" />
+          <span className="text-primary-container text-lg">✦</span>
+          <div className="flex-1 h-px bg-outline-variant/30" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
+          {block.text.replace(/^##\s*/, "")}
+        </h2>
+      </div>
+    );
+  }
+  if (isStepHeading(block.text)) {
+    const match = block.text.match(/^(\d+)단계:\s*(.*)/);
+    if (match) {
+      return (
+        <div className="flex items-start gap-4 py-3">
+          <div className="flex flex-col items-center">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-orange-300 to-amber-100 flex items-center justify-center shadow-md border-2 border-white">
+              <span className="font-headline font-extrabold text-sm sm:text-base text-orange-800">{match[1]}</span>
+            </div>
+            <div className="w-0.5 h-4 bg-orange-200 mt-1" />
+          </div>
+          <div className="pt-1.5">
+            <p className="font-headline font-bold text-base sm:text-lg text-on-surface">{match[2]}</p>
+          </div>
+        </div>
+      );
+    }
+  }
+  // Step answer blocks (indented content after step heading)
+  return (
+    <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant pl-[3.25rem]">
+      {block.text}
+    </p>
+  );
+}
+
+function renderBlockByType(type: string, block: Block, allBlocks: Block[], blockIdx: number) {
+  switch (type) {
+    case "letter":
+      return renderLetterBlock(block);
+    case "checklist":
+      return renderChecklistBlock(block);
+    case "imagination":
+      return renderImaginationBlock(block);
+    case "priorities":
+      return renderPrioritiesBlock(block);
+    case "goals": {
+      const prevVisible = allBlocks.slice(0, blockIdx).filter(b => !b.isPrivate).pop();
+      return renderGoalsBlock(block, prevVisible);
+    }
+    case "steps":
+      return renderStepsBlock(block);
+    default:
+      return renderLetterBlock(block);
+  }
+}
 
 export default function PaperReaderClient({
   paper,
@@ -34,6 +295,9 @@ export default function PaperReaderClient({
   prevPaper: Paper | null;
   nextPaper: Paper | null;
 }) {
+  const grouped = useMemo(() => groupBlocks(paper.blocks), [paper.blocks]);
+  const grad = typeGradients[paper.type];
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       {/* Hero Header */}
@@ -45,31 +309,24 @@ export default function PaperReaderClient({
         {/* Washi tape label */}
         <div className="absolute -top-3 -left-2 sm:-left-4 z-10">
           <div className="bg-secondary-container text-on-secondary-container px-4 sm:px-6 py-1.5 font-bold text-xs shadow-sm -rotate-3 rounded-sm">
-            Work Paper {paper.num} ✿
+            워크페이퍼 {paper.num} ✿
           </div>
         </div>
 
-        {/* Hero image */}
-        <div className="relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6 group">
-          <Image
-            src={typeImages[paper.type] || "/images/letter-writing.jpg"}
-            alt={paper.title}
-            fill
-            className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        {/* Hero gradient with emoji instead of image */}
+        <div className={`relative w-full aspect-[16/9] rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6 bg-gradient-to-br ${grad.bg} flex items-center justify-center`}>
+          <span className="text-6xl sm:text-8xl">{grad.emoji}</span>
           <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg">
             <span className="text-sm font-bold text-primary flex items-center gap-1">
               <span className="text-lg">{typeEmoji[paper.type]}</span>
-              {paper.type}
+              {typeLabelsKo[paper.type]}
             </span>
           </div>
         </div>
 
         {/* Badge & Title */}
         <div className="text-center space-y-3">
-          <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-widest uppercase">
+          <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
             {paper.subtitle}
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary leading-tight">
@@ -86,6 +343,7 @@ export default function PaperReaderClient({
         <LottieWrapper
           src="https://lottie.host/aa610ec0-08e7-4a88-961c-98b5bb1e58e5/EqFkBXJhIt.lottie"
           className="w-20 h-20 opacity-70"
+          fallbackEmoji="💌"
         />
       </div>
 
@@ -97,37 +355,22 @@ export default function PaperReaderClient({
         className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[6px] border-primary-container"
       >
         {/* Background decoration */}
-        <div className="absolute top-4 right-6 -rotate-12 opacity-10 select-none">
-          <span className="material-symbols-outlined text-8xl text-primary">auto_awesome</span>
+        <div className="absolute top-4 right-6 -rotate-12 opacity-10 select-none text-8xl text-primary">
+          ✦
         </div>
 
         <div className="space-y-5 relative z-10">
-          {paper.blocks.map((block, i) => (
+          {grouped.map((item, i) => (
             <motion.div
-              key={block.id}
+              key={item.kind === "private" ? item.key : item.block.id}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + i * 0.05, type: "spring", damping: 25 }}
             >
-              {block.isPrivate ? (
-                <PrivatePlaceholder />
-              ) : block.text.startsWith("##") ? (
-                <div className="pt-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="flex-1 h-px bg-outline-variant/30" />
-                    <span className="material-symbols-outlined text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      auto_awesome
-                    </span>
-                    <div className="flex-1 h-px bg-outline-variant/30" />
-                  </div>
-                  <h2 className="font-serif text-xl sm:text-2xl font-bold text-primary text-center">
-                    {block.text.replace(/^##\s*/, "")}
-                  </h2>
-                </div>
+              {item.kind === "private" ? (
+                <PrivatePlaceholder count={item.count} />
               ) : (
-                <p className="font-body text-base sm:text-lg leading-[1.9] text-on-surface-variant">
-                  {block.text}
-                </p>
+                renderBlockByType(paper.type, item.block, paper.blocks, item.index)
               )}
             </motion.div>
           ))}
@@ -137,7 +380,7 @@ export default function PaperReaderClient({
         <div className="mt-10 flex justify-center">
           <div className="bg-secondary-container/50 px-8 py-3 rotate-1 rounded-sm shadow-sm">
             <span className="font-headline font-bold text-primary tracking-wider text-sm">
-              {typeEmoji[paper.type]} Work Paper {paper.num} 완료
+              {typeEmoji[paper.type]} 워크페이퍼 {paper.num} 읽기 완료
             </span>
           </div>
         </div>
@@ -163,9 +406,9 @@ export default function PaperReaderClient({
               whileTap={{ scale: 0.96 }}
               className="flex items-center gap-3 p-4 bg-white rounded-[1.5rem] puffy-shadow hover:-translate-y-1 transition-all"
             >
-              <span className="material-symbols-outlined text-primary">arrow_back</span>
+              <span className="text-primary text-xl">←</span>
               <div className="min-w-0">
-                <p className="text-[10px] text-outline uppercase tracking-wider font-bold">이전</p>
+                <p className="text-[10px] text-outline tracking-wider font-bold">이전</p>
                 <p className="text-sm font-bold text-on-surface truncate">{prevPaper.title}</p>
               </div>
             </motion.div>
@@ -176,7 +419,7 @@ export default function PaperReaderClient({
           href="/"
           className="w-12 h-12 flex items-center justify-center bg-primary-container rounded-full puffy-shadow hover:scale-110 transition-transform shrink-0"
         >
-          <span className="material-symbols-outlined text-on-primary-container">home</span>
+          <span className="text-xl">🏠</span>
         </Link>
 
         {nextPaper ? (
@@ -189,10 +432,10 @@ export default function PaperReaderClient({
               className="flex items-center justify-end gap-3 p-4 bg-white rounded-[1.5rem] puffy-shadow hover:-translate-y-1 transition-all"
             >
               <div className="min-w-0 text-right">
-                <p className="text-[10px] text-outline uppercase tracking-wider font-bold">다음</p>
+                <p className="text-[10px] text-outline tracking-wider font-bold">다음</p>
                 <p className="text-sm font-bold text-on-surface truncate">{nextPaper.title}</p>
               </div>
-              <span className="material-symbols-outlined text-primary">arrow_forward</span>
+              <span className="text-primary text-xl">→</span>
             </motion.div>
           </Link>
         ) : <div className="flex-1" />}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
-import FloatingDecorations from "@/components/FloatingDecorations";
 
 export const metadata: Metadata = {
   title: "Future Self Archive — 미래의 나에게 보내는 기록",
@@ -18,11 +17,9 @@ export default function RootLayout({
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-surface text-on-surface font-body">
         <Navigation />
-        <FloatingDecorations />
         <main className="flex-1 relative z-10">{children}</main>
         <footer className="text-center py-8 text-xs text-outline/60 font-body relative z-10">
-          <p>Future Self Archive &copy; 2026 김재현</p>
-          <p className="mt-1">미래의 나에게 보내는 기록</p>
+          <p>&copy; 2026 김재현 · 미래의 나에게 보내는 기록</p>
         </footer>
       </body>
     </html>

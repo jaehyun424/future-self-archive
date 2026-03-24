@@ -43,8 +43,8 @@ export default function Navigation() {
                   href="/vault"
                   className="flex items-center gap-1.5 px-4 py-2 bg-primary-container text-on-primary-container rounded-full text-sm font-bold hover:scale-105 transition-transform"
                 >
-                  <span className="material-symbols-outlined text-base">lock_open</span>
-                  Vault
+                  <span className="text-base">🔓</span>
+                  전체 보기
                 </Link>
               )}
               {isVault && (
@@ -52,23 +52,24 @@ export default function Navigation() {
                   href="/"
                   className="flex items-center gap-1.5 px-4 py-2 bg-surface-container text-on-surface rounded-full text-sm font-bold hover:scale-105 transition-transform"
                 >
-                  <span className="material-symbols-outlined text-base">public</span>
+                  <span className="text-base">🌐</span>
                   공개
                 </Link>
               )}
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1 px-4 py-2 text-outline text-sm font-bold hover:text-primary transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 text-outline text-sm font-bold hover:text-primary transition-colors"
               >
-                <span className="material-symbols-outlined text-base">logout</span>
+                <span className="text-base">👋</span>
+                로그아웃
               </button>
             </>
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-bold hover:scale-105 transition-transform"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-primary text-white rounded-full text-sm font-bold hover:scale-105 transition-transform puffy-shadow"
             >
-              <span className="material-symbols-outlined text-base">lock</span>
+              <span className="text-base">🔒</span>
               로그인
             </Link>
           )}

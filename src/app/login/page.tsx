@@ -36,17 +36,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-sticker-texture">
-      {/* Decorative background */}
-      <div className="absolute top-20 left-10 opacity-20 select-none">
-        <span className="material-symbols-outlined text-6xl text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-          lock
-        </span>
+    <div
+      className="min-h-[80vh] flex items-center justify-center px-4 py-12 relative"
+      style={{ background: "linear-gradient(180deg, #fff5f9 0%, #f8f9fa 100%)" }}
+    >
+      {/* Decorative background - emoji instead of Material Symbols */}
+      <div className="absolute top-20 left-10 opacity-15 select-none text-6xl">
+        🔒
       </div>
-      <div className="absolute bottom-20 right-10 opacity-20 select-none rotate-12">
-        <span className="material-symbols-outlined text-7xl text-tertiary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-          key
-        </span>
+      <div className="absolute bottom-20 right-10 opacity-15 select-none text-7xl rotate-12">
+        🔑
       </div>
 
       <motion.div
@@ -59,7 +58,7 @@ export default function LoginPage() {
         <div className="bg-white/80 backdrop-blur-xl rounded-[3rem] p-8 sm:p-10 puffy-shadow relative overflow-hidden">
           {/* Top decoration */}
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-5 py-1 rounded-full text-xs font-bold shadow-sm">
-            SECRET VAULT 🔐
+            비밀 보관소 🔐
           </div>
 
           <div className="text-center space-y-6 pt-4">
@@ -99,7 +98,7 @@ export default function LoginPage() {
                 <motion.form
                   key="form"
                   onSubmit={handleSubmit}
-                  className="space-y-4"
+                  className="space-y-6"
                 >
                   <div className="relative">
                     <input
@@ -112,16 +111,19 @@ export default function LoginPage() {
                     />
                   </div>
 
-                  {error && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-sm text-error font-bold flex items-center justify-center gap-1"
-                    >
-                      <span className="material-symbols-outlined text-sm">error</span>
-                      {error}
-                    </motion.p>
-                  )}
+                  {/* Error message with min-height to prevent layout jump */}
+                  <div className="min-h-[1.5rem]">
+                    {error && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-sm text-error font-bold flex items-center justify-center gap-1"
+                      >
+                        <span>⚠️</span>
+                        {error}
+                      </motion.p>
+                    )}
+                  </div>
 
                   <motion.button
                     type="submit"
@@ -134,16 +136,15 @@ export default function LoginPage() {
                         <motion.span
                           animate={{ rotate: 360 }}
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          className="material-symbols-outlined text-lg"
+                          className="inline-block"
                         >
-                          progress_activity
+                          ⏳
                         </motion.span>
                         확인 중...
                       </span>
                     ) : (
                       <span className="flex items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-lg">lock_open</span>
-                        열기
+                        🔓 열기
                       </span>
                     )}
                   </motion.button>

@@ -18,7 +18,7 @@ export default function VaultDashboardClient({ papers }: { papers: Paper[] }) {
           {/* Washi tape label */}
           <div className="absolute -top-4 -left-2 sm:-left-4 z-10">
             <div className="bg-secondary-container text-on-secondary-container px-4 py-1.5 font-bold text-xs shadow-sm -rotate-3 rounded-sm">
-              PRIVATE VAULT 🔐
+              비밀 보관소 🔐
             </div>
           </div>
 
@@ -40,6 +40,7 @@ export default function VaultDashboardClient({ papers }: { papers: Paper[] }) {
               <LottieWrapper
                 src="https://lottie.host/2bc21e6b-433e-4060-9160-15204dde2a6a/UkfXxMFfaP.lottie"
                 className="w-full h-full"
+                fallbackEmoji="✨"
               />
             </div>
           </div>
@@ -47,22 +48,18 @@ export default function VaultDashboardClient({ papers }: { papers: Paper[] }) {
           {/* Stats bar */}
           <div className="mt-6 flex flex-wrap gap-3">
             <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full puffy-shadow text-sm">
-              <span className="material-symbols-outlined text-tertiary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
-                visibility
-              </span>
-              <span className="font-bold text-on-surface">{papers.length}개 워크페이퍼</span>
+              <span className="text-base">👁️</span>
+              <span className="font-bold text-on-surface">{papers.length}개의 기록</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full puffy-shadow text-sm">
-              <span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
-                lock_open
-              </span>
+              <span className="text-base">🔓</span>
               <span className="font-bold text-on-surface">전체 공개 모드</span>
             </div>
           </div>
         </motion.div>
 
         {/* Papers Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {papers.map((paper, index) => (
             <PaperCard key={paper.id} paper={paper} index={index} isVault />
           ))}

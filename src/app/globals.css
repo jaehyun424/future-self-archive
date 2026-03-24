@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,800&family=Noto+Serif+KR:wght@400;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
 @import "tailwindcss";
@@ -42,8 +42,11 @@ body {
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
+  overflow: hidden;
 }
 
 .puffy-shadow {
@@ -51,8 +54,9 @@ body {
 }
 
 .bg-sticker-texture {
-  background-image: radial-gradient(#FFB7D5 0.5px, transparent 0.5px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(#FFB7D5 0.3px, transparent 0.3px);
+  background-size: 48px 48px;
+  opacity: 1;
 }
 
 .bg-vault-texture {

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function PrivatePlaceholder() {
+export default function PrivatePlaceholder({ count }: { count?: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -12,7 +12,7 @@ export default function PrivatePlaceholder() {
       <div className="p-6 sm:p-8 bg-surface-container-low rounded-[2rem] relative overflow-hidden">
         {/* Top secret badge */}
         <div className="absolute -top-3 left-8 bg-primary text-white px-4 py-1 rounded-full text-xs font-black shadow-md z-10">
-          PRIVATE
+          비공개
         </div>
 
         {/* Sparkle decoration */}
@@ -27,9 +27,11 @@ export default function PrivatePlaceholder() {
         </div>
 
         <div className="flex items-center gap-3 pt-2">
-          <span className="material-symbols-outlined text-primary/40 text-xl">lock</span>
+          <span className="text-xl opacity-40">🔒</span>
           <p className="text-primary/60 italic font-body text-sm sm:text-base">
-            [비공개 내용입니다]
+            {count && count > 1
+              ? `이 구간에는 비공개 내용 ${count}개가 포함되어 있습니다`
+              : "[비공개 내용입니다]"}
           </p>
         </div>
 
