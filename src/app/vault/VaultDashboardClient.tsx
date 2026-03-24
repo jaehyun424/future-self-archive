@@ -1,8 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import PaperCard from "@/components/PaperCard";
+import Link from "next/link";
 import type { Paper } from "@/lib/types";
+
+const vaultGroups = [
+  { title: "현재 → 미래에게 보내는 편지", emoji: "💌", href: "/vault/paper/wp1-1", sub: "3년 후 · 10년 후", bg: "linear-gradient(135deg, #fdf2f8 0%, #fff5f9 50%, #ffffff 100%)" },
+  { title: "미래 → 현재에게 보내는 편지", emoji: "📮", href: "/vault/paper/wp2-1", sub: "3년 후가 · 10년 후가", bg: "linear-gradient(135deg, #f0fdf4 0%, #f5fff8 50%, #ffffff 100%)" },
+  { title: "위협 요인 7가지", emoji: "⚡", href: "/vault/paper/wp3", bg: "linear-gradient(135deg, #fef2f2 0%, #fff5f5 50%, #ffffff 100%)" },
+  { title: "미래의 나 상상 도구", emoji: "🌈", href: "/vault/paper/wp4", bg: "linear-gradient(135deg, #f0f9ff 0%, #f5faff 50%, #ffffff 100%)" },
+  { title: "진실 7가지", emoji: "💎", href: "/vault/paper/wp5", bg: "linear-gradient(135deg, #ecfeff 0%, #f2feff 50%, #ffffff 100%)" },
+  { title: "세 가지 우선순위 ①", emoji: "🎯", href: "/vault/paper/wp6", bg: "linear-gradient(135deg, #fefce8 0%, #fffef2 50%, #ffffff 100%)" },
+  { title: "세 가지 우선순위 ②", emoji: "🚀", href: "/vault/paper/wp7", bg: "linear-gradient(135deg, #eff6ff 0%, #f5f9ff 50%, #ffffff 100%)" },
+  { title: "미래의 내가 되는 7단계", emoji: "🪜", href: "/vault/paper/wp8", bg: "linear-gradient(135deg, #fff7ed 0%, #fffaf5 50%, #ffffff 100%)" },
+];
 
 export default function VaultDashboardClient({
   papers,
@@ -32,7 +43,7 @@ export default function VaultDashboardClient({
               </p>
             </div>
 
-            {/* Sparkle emoji decoration (replaces Lottie) */}
+            {/* Sparkle emoji decoration */}
             <motion.div
               animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -57,18 +68,47 @@ export default function VaultDashboardClient({
           </div>
         </motion.div>
 
-        {/* Papers Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {papers.map((paper, index) => (
-            <PaperCard key={paper.id} paper={paper} index={index} isVault />
+        {/* 8 Group Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {vaultGroups.map((group, index) => (
+            <motion.div
+              key={group.href}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: index * 0.08,
+                type: "spring",
+                damping: 25,
+                stiffness: 120,
+              }}
+              whileTap={{ scale: 0.9, rotate: -2 }}
+              whileHover={{
+                y: -12,
+                boxShadow: "0 24px 60px -8px rgba(133,77,103,0.25)",
+                transition: { type: "spring", damping: 22, stiffness: 130 },
+              }}
+            >
+              <Link href={group.href} className="block">
+                <div
+                  className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-shadow duration-300 hover:shadow-[0_20px_60px_-8px_rgba(133,77,103,0.18)] overflow-hidden min-h-[180px] sm:min-h-[220px]"
+                  style={{ background: group.bg }}
+                >
+                  <span className="text-4xl sm:text-5xl mb-3">{group.emoji}</span>
+                  <h3 className="font-headline font-bold text-sm sm:text-base text-on-surface leading-tight">
+                    {group.title}
+                  </h3>
+                  {group.sub && (
+                    <p className="text-xs text-outline mt-1.5">{group.sub}</p>
+                  )}
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
 
-        {/* Decorative dots */}
-        <div className="mt-16 flex justify-center gap-3">
-          <div className="w-3 h-3 rounded-full bg-primary-container" />
-          <div className="w-3 h-3 rounded-full bg-secondary-container" />
-          <div className="w-3 h-3 rounded-full bg-tertiary-container" />
+        {/* Bottom decoration */}
+        <div className="mt-10 mb-6 text-center opacity-40">
+          <span className="text-xl">🐾 🌸 🐾</span>
         </div>
       </div>
     </div>

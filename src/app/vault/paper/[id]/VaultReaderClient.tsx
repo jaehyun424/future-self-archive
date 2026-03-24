@@ -214,12 +214,10 @@ function renderGoalsBlock(block: Block) {
       /^(창업|정치|가족) 목표 \d+:\s*/,
       ""
     );
-    const goalNum = block.text.match(/목표 (\d+)/)?.[1];
     return (
-      <div className="flex items-start gap-3 py-1.5 pl-2">
-        <span className="text-sm mt-0.5 text-primary/60">✿</span>
+      <div className="flex items-start gap-3 py-2.5">
+        <span className="text-base mt-0.5">🌱</span>
         <p className="font-body text-base sm:text-lg leading-[1.75] text-on-surface-variant">
-          <span className="text-xs text-outline mr-1">목표{goalNum}</span>
           {goalText}
         </p>
       </div>
@@ -317,12 +315,10 @@ export default function VaultReaderClient({
   prevPaper: Paper | null;
   nextPaper: Paper | null;
 }) {
-  // Goals category headers — evenly distribute categories across blocks
   const goalsCategoryHeaders = useMemo(() => {
     if (paper.type !== "goals") return {};
     const map: Record<number, string> = {};
 
-    // Extract category order from public blocks
     const categories: string[] = [];
     for (const block of paper.blocks) {
       if (!block.isPrivate && isGoalHeading(block.text)) {
@@ -333,7 +329,6 @@ export default function VaultReaderClient({
 
     if (categories.length === 0) return map;
 
-    // Each category has the same number of blocks (3 each)
     const perCat = Math.ceil(paper.blocks.length / categories.length);
 
     for (let c = 0; c < categories.length; c++) {
@@ -347,189 +342,197 @@ export default function VaultReaderClient({
   }, [paper.blocks, paper.type]);
 
   return (
-    <div className="bg-vault-texture min-h-[80vh]">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        {/* Hero Header */}
-        <motion.section
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", damping: 20, stiffness: 100 }}
-          className="relative mb-8 sm:mb-12"
-        >
-          {/* Hero image */}
-          <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
-            <img
-              src={paperImages[paper.id]}
-              alt=""
-              className="w-full h-48 sm:h-56 md:h-64 object-cover"
-            />
-          </div>
-
-          {/* Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: "spring", damping: 22, stiffness: 100, duration: 0.6 }}
+    >
+      <div className="bg-vault-texture min-h-[80vh]">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+          {/* Hero Header */}
+          <motion.section
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, type: "spring", damping: 25, stiffness: 120 }}
-            className="text-center space-y-3"
+            transition={{ type: "spring", damping: 20, stiffness: 100 }}
+            className="relative mb-8 sm:mb-12"
           >
-            <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
-              {paper.subtitle}
+            {/* Hero image */}
+            <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+              <img
+                src={paperImages[paper.id]}
+                alt=""
+                className="w-full h-48 sm:h-56 md:h-64 object-cover"
+              />
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary leading-tight">
-              {paper.title}
-            </h1>
-            {paper.timeline && (
-              <p className="text-sm text-outline italic font-body">
-                {paper.timeline}
-              </p>
-            )}
+
+            {/* Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, type: "spring", damping: 25, stiffness: 120 }}
+              className="text-center space-y-3"
+            >
+              <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
+                {paper.subtitle}
+              </div>
+              <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary leading-tight">
+                {paper.title}
+              </h1>
+              {paper.timeline && (
+                <p className="text-sm text-outline italic font-body">
+                  {paper.timeline}
+                </p>
+              )}
+            </motion.div>
+          </motion.section>
+
+          {/* Sparkle emoji */}
+          <motion.div
+            className="flex justify-center mb-6"
+            animate={{ scale: [1, 1.2, 1], rotate: [0, 8, -8, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <span className="text-3xl opacity-60">✨</span>
           </motion.div>
-        </motion.section>
 
-        {/* Sparkle emoji (replaces Lottie) */}
-        <motion.div
-          className="flex justify-center mb-6"
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 8, -8, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <span className="text-3xl opacity-60">✨</span>
-        </motion.div>
-
-        {/* Content */}
-        <motion.article
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.15,
-            type: "spring",
-            damping: 25,
-            stiffness: 120,
-          }}
-          className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[6px] border-tertiary-container"
-        >
-          {/* Background decoration */}
-          <div className="absolute top-4 right-6 -rotate-12 opacity-10 select-none text-8xl text-tertiary">
-            ✦
-          </div>
-
-          {/* Mood bar */}
-          <div className="flex items-center gap-3 p-4 bg-surface-container-low rounded-[1.5rem] mb-8">
-            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-xl shadow-inner">
-              {paperEmoji[paper.id]}
+          {/* Content */}
+          <motion.article
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.15,
+              type: "spring",
+              damping: 25,
+              stiffness: 120,
+            }}
+            className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[6px] border-tertiary-container"
+          >
+            {/* Background decoration */}
+            <div className="absolute top-4 right-6 -rotate-12 opacity-10 select-none text-8xl text-tertiary">
+              ✦
             </div>
-            <div>
-              <p className="text-[10px] font-bold tracking-wider text-primary/60">
-                타입
-              </p>
-              <p className="text-sm font-bold text-on-surface-variant">
-                {typeLabelsKo[paper.type]}
-              </p>
-            </div>
-            <div className="ml-auto flex items-center gap-1 text-xs text-tertiary font-bold bg-tertiary-container/30 px-3 py-1 rounded-full">
-              <span>🔓</span>
-              비공개 포함
-            </div>
-          </div>
 
-          <div className="space-y-5 relative z-10">
-            {paper.blocks.map((block, i) => {
-              const isPrivateBlock = block.isPrivate;
-              const isLetterStart =
-                paper.type === "letter" && block.text.startsWith("안녕");
-
-              return (
-                <motion.div
-                  key={block.id}
-                  initial={{
-                    opacity: 0,
-                    ...(isPrivateBlock
-                      ? { x: -15 }
-                      : isLetterStart
-                        ? { scale: 1.03, y: 15 }
-                        : { y: 20 }),
-                  }}
-                  animate={{
-                    opacity: 1,
-                    ...(isPrivateBlock
-                      ? { x: 0 }
-                      : isLetterStart
-                        ? { scale: 1, y: 0 }
-                        : { y: 0 }),
-                  }}
-                  transition={{
-                    delay: 0.1 + i * 0.05,
-                    type: "spring",
-                    damping: 25,
-                    stiffness: 120,
-                  }}
-                >
-                  {/* Goals category header */}
-                  {goalsCategoryHeaders[i] && (
-                    <div className="mt-4 mb-2 flex items-center gap-2">
-                      <span className="text-xl">
-                        {goalCategoryEmoji[goalsCategoryHeaders[i]] || "📌"}
-                      </span>
-                      <span className="font-headline font-bold text-base text-primary">
-                        {goalsCategoryHeaders[i]}
-                      </span>
-                      <div className="flex-1 h-px bg-outline-variant/20" />
-                    </div>
-                  )}
-
-                  {block.isPrivate ? (
-                    <PrivateHighlight>
-                      {renderBlockByType(paper.type, block)}
-                    </PrivateHighlight>
-                  ) : (
-                    renderBlockByType(paper.type, block)
-                  )}
-                </motion.div>
-              );
-            })}
-
-            {/* Letter date at end */}
-            {paper.type === "letter" && paper.timeline && (
-              <div className="text-right mt-8">
-                <p className="text-sm text-outline italic font-serif">
-                  🌸 {paper.timeline.split("→")[0].trim()} 🌸
+            {/* Mood bar */}
+            <div className="flex items-center gap-3 p-4 bg-surface-container-low rounded-[1.5rem] mb-8">
+              <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-xl shadow-inner">
+                {paperEmoji[paper.id]}
+              </div>
+              <div>
+                <p className="text-[10px] font-bold tracking-wider text-primary/60">
+                  타입
+                </p>
+                <p className="text-sm font-bold text-on-surface-variant">
+                  {typeLabelsKo[paper.type]}
                 </p>
               </div>
-            )}
+              <div className="ml-auto flex items-center gap-1 text-xs text-tertiary font-bold bg-tertiary-container/30 px-3 py-1 rounded-full">
+                <span>🔓</span>
+                비공개 포함
+              </div>
+            </div>
+
+            <div className="space-y-5 relative z-10">
+              {paper.blocks.map((block, i) => {
+                const isPrivateBlock = block.isPrivate;
+                const isLetterStart =
+                  paper.type === "letter" && block.text.startsWith("안녕");
+
+                return (
+                  <motion.div
+                    key={block.id}
+                    initial={{
+                      opacity: 0,
+                      ...(isPrivateBlock
+                        ? { x: -20 }
+                        : isLetterStart
+                          ? { scale: 1.04, y: 15 }
+                          : { y: 25 }),
+                    }}
+                    animate={{
+                      opacity: 1,
+                      ...(isPrivateBlock
+                        ? { x: 0 }
+                        : isLetterStart
+                          ? { scale: 1, y: 0 }
+                          : { y: 0 }),
+                    }}
+                    transition={{
+                      delay: 0.06 * i,
+                      type: "spring",
+                      damping: 25,
+                      stiffness: isPrivateBlock ? 100 : 120,
+                    }}
+                  >
+                    {/* Goals category header */}
+                    {goalsCategoryHeaders[i] && (
+                      <div className="mt-4 mb-2 flex items-center gap-2">
+                        <span className="text-xl">
+                          {goalCategoryEmoji[goalsCategoryHeaders[i]] || "📌"}
+                        </span>
+                        <span className="font-headline font-bold text-base text-primary">
+                          {goalsCategoryHeaders[i]}
+                        </span>
+                        <div className="flex-1 h-px bg-outline-variant/20" />
+                      </div>
+                    )}
+
+                    {block.isPrivate ? (
+                      <PrivateHighlight>
+                        {renderBlockByType(paper.type, block)}
+                      </PrivateHighlight>
+                    ) : (
+                      renderBlockByType(paper.type, block)
+                    )}
+                  </motion.div>
+                );
+              })}
+
+              {/* Letter date at end */}
+              {paper.type === "letter" && paper.timeline && (
+                <div className="text-right mt-8">
+                  <p className="text-sm text-outline italic font-serif">
+                    🌷 {paper.timeline.split("→")[0].trim()} 🌷
+                  </p>
+                </div>
+              )}
+            </div>
+          </motion.article>
+
+          {/* Dock Navigation */}
+          <div className="flex items-center justify-center py-10">
+            <div className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-xl rounded-full px-4 py-2.5 puffy-shadow">
+              {prevPaper ? (
+                <Link
+                  href={`/vault/paper/${prevPaper.id}`}
+                  className="px-4 py-2 text-sm font-bold text-primary rounded-full hover:bg-primary-container/30 active:scale-95 transition-all"
+                >
+                  ← 이전
+                </Link>
+              ) : (
+                <div className="w-16" />
+              )}
+
+              <Link
+                href="/vault"
+                className="w-11 h-11 flex items-center justify-center bg-tertiary-container rounded-full active:scale-90 transition-transform"
+              >
+                <span className="text-lg">🏠</span>
+              </Link>
+
+              {nextPaper ? (
+                <Link
+                  href={`/vault/paper/${nextPaper.id}`}
+                  className="px-4 py-2 text-sm font-bold text-primary rounded-full hover:bg-primary-container/30 active:scale-95 transition-all"
+                >
+                  다음 →
+                </Link>
+              ) : (
+                <div className="w-16" />
+              )}
+            </div>
           </div>
-        </motion.article>
-
-        {/* Navigation */}
-        <div className="flex items-center justify-between py-6">
-          {prevPaper ? (
-            <Link
-              href={`/vault/paper/${prevPaper.id}`}
-              className="px-5 py-2.5 text-sm font-bold text-primary bg-white rounded-full puffy-shadow active:scale-95 transition-transform"
-            >
-              ← 이전
-            </Link>
-          ) : (
-            <div className="w-[76px]" />
-          )}
-
-          <Link
-            href="/vault"
-            className="w-12 h-12 flex items-center justify-center bg-tertiary-container rounded-full puffy-shadow active:scale-95 transition-transform"
-          >
-            <span className="text-lg">🏠</span>
-          </Link>
-
-          {nextPaper ? (
-            <Link
-              href={`/vault/paper/${nextPaper.id}`}
-              className="px-5 py-2.5 text-sm font-bold text-primary bg-white rounded-full puffy-shadow active:scale-95 transition-transform"
-            >
-              다음 →
-            </Link>
-          ) : (
-            <div className="w-[76px]" />
-          )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
