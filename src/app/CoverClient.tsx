@@ -39,15 +39,6 @@ export default function CoverClient() {
             </div>
           </motion.div>
 
-          {/* Sparkle emoji animation */}
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="text-5xl -mt-4 pointer-events-none"
-          >
-            ✨
-          </motion.div>
-
           {/* Typography */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
