@@ -47,14 +47,18 @@ export default function CoverClient() {
             className="space-y-3"
           >
             <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary font-bold leading-tight">
-              2026 퓨처 셀프 아카이브
-            </p>
-            <p className="text-base sm:text-lg text-on-surface-variant font-body">
               미래의 나와 현재의 내가 주고받은 편지와 기록
             </p>
             <p className="text-sm text-outline font-body max-w-md mx-auto">
               {"(벤저민 하디 '퓨처 셀프' 워크지를 바탕으로 작성한 내용)"}
             </p>
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="text-4xl pointer-events-none"
+            >
+              ✨
+            </motion.div>
           </motion.div>
         </div>
       </section>
