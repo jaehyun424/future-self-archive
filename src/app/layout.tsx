@@ -11,7 +11,11 @@ export const metadata: Metadata = {
     title: "퓨처 셀프 아카이브",
     description: "미래의 나와 현재의 내가 주고받은 편지와 기록",
     type: "website",
-    images: [{ url: "/opengraph-image?v=8", width: 1200, height: 630 }],
+    images: [{ url: "/og/og-rabbit-v2.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og/og-rabbit-v2.jpg"],
   },
 };
 
