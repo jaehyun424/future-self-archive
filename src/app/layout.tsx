@@ -27,7 +27,7 @@ export default function RootLayout({
         <Navigation />
         <main className="flex-1 relative z-10">{children}</main>
         <footer className="text-center py-8 text-xs text-outline/60 font-body relative z-10">
-          <p>퓨처 셀프 아카이브</p>
+          <p>2026 퓨처 셀프 아카이브</p>
         </footer>
       </body>
     </html>

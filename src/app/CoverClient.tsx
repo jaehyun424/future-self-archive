@@ -47,7 +47,8 @@ export default function CoverClient() {
             className="space-y-3"
           >
             <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary font-bold leading-tight">
-              미래의 나와 현재의 내가 주고받은 편지와 기록
+              <span className="hidden sm:inline">미래의 나와 현재의 내가 주고받은<br />편지와 기록</span>
+              <span className="sm:hidden">미래의 나와 현재의 내가<br />주고받은 편지와 기록</span>
             </p>
             <p className="text-sm text-outline font-body max-w-md mx-auto">
               {"(벤저민 하디 '퓨처 셀프' 워크지를 바탕으로 작성한 내용)"}
