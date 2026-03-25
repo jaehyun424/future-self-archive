@@ -129,7 +129,7 @@ export default function LoginPage() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="비밀번호"
+                      placeholder=""
                       className="w-full px-6 py-4 bg-surface-container-high/50 rounded-[1.5rem] text-center text-lg font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:bg-primary-container/20 transition-all placeholder:text-outline/50"
                       autoFocus
                     />

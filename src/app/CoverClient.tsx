@@ -21,7 +21,7 @@ export default function CoverClient() {
       <FloatingDecorations />
 
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center px-4 sm:px-6 pb-12 pt-8">
+      <section className="relative flex flex-col items-center justify-center px-4 sm:px-6 pb-10 pt-8">
         <div className="max-w-4xl w-full flex flex-col items-center text-center space-y-6 sm:space-y-8">
           {/* Hero image */}
           <motion.div
@@ -44,15 +44,13 @@ export default function CoverClient() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, type: "spring", damping: 25, stiffness: 120 }}
-            className="space-y-4"
+            className="space-y-3"
           >
             <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary font-bold leading-tight">
-              미래의 나에게 보내는 기록
+              2026 퓨처 셀프 아카이브
             </p>
             <p className="text-base sm:text-lg text-on-surface-variant font-body">
-              과거에서 온{" "}
-              <span className="text-primary font-bold">행복한 메시지</span>가
-              <br className="sm:hidden" /> 당신을 기다리고 있어요
+              미래의 나와 현재의 내가 주고받은 편지와 기록
             </p>
             <p className="text-sm text-outline font-body max-w-md mx-auto">
               {"(벤저민 하디 '퓨처 셀프' 워크지를 바탕으로 작성한 내용)"}

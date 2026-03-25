@@ -45,7 +45,7 @@ export default function Navigation() {
         >
           <span className="text-2xl">💌</span>
           <span className="font-headline font-extrabold tracking-tight text-lg sm:text-xl text-primary">
-            Future Self Archive
+            퓨처 셀프 아카이브
           </span>
         </Link>
         <div className="flex items-center gap-3">
