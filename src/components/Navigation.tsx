@@ -43,7 +43,7 @@ export default function Navigation() {
           href={isVault ? "/vault" : "/"}
           className="flex items-center gap-2"
         >
-          <span className="text-2xl">💌</span>
+          <span className="text-2xl">{isVault ? "🔓" : "💌"}</span>
           <span className="font-headline font-extrabold tracking-tight text-lg sm:text-xl text-primary">
             퓨처 셀프 아카이브
           </span>

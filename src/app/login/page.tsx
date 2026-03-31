@@ -43,14 +43,6 @@ export default function LoginPage() {
         background: "linear-gradient(180deg, #fff5f9 0%, #f8f9fa 100%)",
       }}
     >
-      {/* Decorative background */}
-      <div className="absolute top-20 left-10 opacity-15 select-none text-6xl">
-        💭
-      </div>
-      <div className="absolute bottom-20 right-10 opacity-15 select-none text-7xl rotate-12">
-        🪄
-      </div>
-
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -93,7 +85,7 @@ export default function LoginPage() {
 
             <div>
               <h1 className="font-headline font-extrabold text-2xl text-primary mb-2">
-                {success ? "환영합니다!" : "비밀이야~"}
+                {success ? "환영합니다!" : "비밀 보관소"}
               </h1>
               {success && (
                 <p className="text-sm text-on-surface-variant font-body">
@@ -171,7 +163,7 @@ export default function LoginPage() {
                       </span>
                     ) : (
                       <span className="flex items-center justify-center gap-2">
-                        들어갈래~ ✨
+                        열기 🔓
                       </span>
                     )}
                   </motion.button>
@@ -183,7 +175,7 @@ export default function LoginPage() {
 
         {/* Bottom hint */}
         <p className="text-center text-xs text-outline/50 mt-6">
-          🐾 나만 볼 수 있는 비밀 공간
+          나만의 아카이브
         </p>
       </motion.div>
     </div>

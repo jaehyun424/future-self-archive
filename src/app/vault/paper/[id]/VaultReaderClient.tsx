@@ -347,7 +347,7 @@ export default function VaultReaderClient({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: "spring", damping: 22, stiffness: 100, duration: 0.6 }}
     >
-      <div className="bg-vault-texture min-h-[80vh]">
+      <div className="bg-gradient-to-b from-[#fdf5ea]/50 to-surface min-h-[80vh]">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Hero Header */}
           <motion.section
@@ -357,7 +357,7 @@ export default function VaultReaderClient({
             className="relative mb-8 sm:mb-12"
           >
             {/* Hero image */}
-            <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-6">
+            <div className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden puffy-shadow mb-4">
               <img
                 src={paperImages[paper.id]}
                 alt=""
@@ -372,7 +372,7 @@ export default function VaultReaderClient({
               transition={{ delay: 0.2, type: "spring", damping: 25, stiffness: 120 }}
               className="text-center space-y-3"
             >
-              <div className="inline-block px-6 py-1.5 bg-primary-container text-on-primary-container rounded-full font-bold text-xs tracking-wider">
+              <div className="inline-block px-4 py-1 bg-primary-container/40 text-on-primary-container/70 rounded-full font-bold text-[10px] tracking-wider">
                 {paper.subtitle}
               </div>
               <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-primary leading-tight">
@@ -385,15 +385,6 @@ export default function VaultReaderClient({
               )}
             </motion.div>
           </motion.section>
-
-          {/* Sparkle emoji */}
-          <motion.div
-            className="flex justify-center mb-6"
-            animate={{ scale: [1, 1.2, 1], rotate: [0, 8, -8, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <span className="text-3xl opacity-60">✨</span>
-          </motion.div>
 
           {/* Content */}
           <motion.article
@@ -413,26 +404,61 @@ export default function VaultReaderClient({
             </div>
 
             {/* Mood bar */}
-            <div className="flex items-center gap-3 p-4 bg-surface-container-low rounded-[1.5rem] mb-8">
-              <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-xl shadow-inner">
-                {paperEmoji[paper.id]}
-              </div>
-              <div>
-                <p className="text-[10px] font-bold tracking-wider text-primary/60">
-                  타입
-                </p>
-                <p className="text-sm font-bold text-on-surface-variant">
-                  {typeLabelsKo[paper.type]}
-                </p>
-              </div>
-              <div className="ml-auto flex items-center gap-1 text-xs text-tertiary font-bold bg-tertiary-container/30 px-3 py-1 rounded-full">
-                <span>🔓</span>
-                비공개 포함
-              </div>
+            <div className="flex items-center gap-3 px-4 py-3 bg-primary-container/10 rounded-2xl mb-6">
+              <span className="text-xl">{paperEmoji[paper.id]}</span>
+              <span className="text-sm font-bold text-on-surface-variant">{typeLabelsKo[paper.type]}</span>
+              <span className="ml-auto text-xs text-primary/50 font-bold">🔓 비공개 포함</span>
             </div>
 
             <div className="space-y-5 relative z-10">
-              {paper.blocks.map((block, i) => {
+              {paper.type === "priorities" ? (
+                <div className="space-y-8">
+                  {/* 섹션 1: 미래의 나 (비공개) */}
+                  {paper.blocks[0] && (
+                    <div>
+                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">MY FUTURE SELF</p>
+                      {paper.blocks[0].isPrivate ? (
+                        <PrivateHighlight>{renderBlockByType(paper.type, paper.blocks[0])}</PrivateHighlight>
+                      ) : renderBlockByType(paper.type, paper.blocks[0])}
+                    </div>
+                  )}
+
+                  {/* 섹션 2: 3대 우선순위 */}
+                  <div>
+                    <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">TOP 3 PRIORITIES</p>
+                    <div className="space-y-3">
+                      {paper.blocks.slice(1, 4).map((block) => (
+                        <div key={block.id}>
+                          {block.isPrivate ? (
+                            <PrivateHighlight>{renderBlockByType(paper.type, block)}</PrivateHighlight>
+                          ) : renderBlockByType(paper.type, block)}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 섹션 3: 줄일 것 (비공개) */}
+                  {paper.blocks[4] && (
+                    <div>
+                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">LET GO</p>
+                      {paper.blocks[4].isPrivate ? (
+                        <PrivateHighlight>{renderBlockByType(paper.type, paper.blocks[4])}</PrivateHighlight>
+                      ) : renderBlockByType(paper.type, paper.blocks[4])}
+                    </div>
+                  )}
+
+                  {/* 섹션 4: 한 줄 결심 */}
+                  {paper.blocks[5] && (
+                    <div>
+                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">IF MY FUTURE SELF RETURNED</p>
+                      <p className="font-serif text-lg sm:text-xl font-bold text-primary leading-relaxed">
+                        {paper.blocks[5].text}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+              paper.blocks.map((block, i) => {
                 const isPrivateBlock = block.isPrivate;
                 const isLetterStart =
                   paper.type === "letter" && block.text.startsWith("안녕");
@@ -485,7 +511,8 @@ export default function VaultReaderClient({
                     )}
                   </motion.div>
                 );
-              })}
+              })
+              )}
 
               {/* Letter date at end */}
               {paper.type === "letter" && paper.timeline && (
