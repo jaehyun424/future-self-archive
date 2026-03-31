@@ -44,12 +44,11 @@ export default function LoginPage() {
       }}
     >
       {/* Decorative background */}
-      <div className="absolute top-20 left-10 opacity-15 select-none text-6xl">
-        💭
-      </div>
-      <div className="absolute bottom-20 right-10 opacity-15 select-none text-7xl rotate-12">
-        🪄
-      </div>
+      <div className="absolute top-16 left-8 opacity-10 select-none text-5xl">💭</div>
+      <div className="absolute bottom-24 right-8 opacity-10 select-none text-6xl rotate-12">🪄</div>
+      <div className="absolute top-32 right-16 opacity-10 select-none text-4xl -rotate-6">🌸</div>
+      <div className="absolute bottom-40 left-12 opacity-10 select-none text-5xl rotate-6">🦋</div>
+      <div className="absolute top-1/2 left-4 opacity-5 select-none text-3xl">✨</div>
 
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -93,11 +92,11 @@ export default function LoginPage() {
 
             <div>
               <h1 className="font-headline font-extrabold text-2xl text-primary mb-2">
-                {success ? "환영합니다!" : "비밀이야~"}
+                {success ? "어서와~ 🐾" : "비밀이야~"}
               </h1>
               {success && (
                 <p className="text-sm text-on-surface-variant font-body">
-                  잠시만 기다려주세요...
+                  비밀 기록을 열고 있어요...
                 </p>
               )}
             </div>
@@ -115,7 +114,7 @@ export default function LoginPage() {
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     className="text-7xl"
                   >
-                    🎉
+                    🐱
                   </motion.div>
                 </motion.div>
               ) : (
@@ -129,7 +128,7 @@ export default function LoginPage() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder=""
+                      placeholder="✱✱✱✱"
                       className="w-full px-6 py-4 bg-surface-container-high/50 rounded-[1.5rem] text-center text-lg font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:bg-primary-container/20 transition-all placeholder:text-outline/50"
                     />
                   </div>

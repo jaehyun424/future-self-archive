@@ -28,13 +28,13 @@ export default function VaultDashboardClient({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 120 }}
-          className="mb-4"
+          className="mb-6"
         >
           <h1 className="font-headline font-extrabold text-2xl sm:text-3xl text-primary mb-2 leading-tight">
             나만 볼 수 있는 기록들 🐾
           </h1>
           <p className="text-on-surface-variant text-sm sm:text-base font-body max-w-md">
-            비공개 내용을 포함한 전체 기록
+            모든 비밀이 담긴 나만의 아카이브
           </p>
         </motion.div>
 
@@ -73,7 +73,7 @@ export default function VaultDashboardClient({
         </div>
 
         {/* Bottom decoration */}
-        <div className="mt-4 mb-6 text-center opacity-40">
+        <div className="mt-8 mb-6 text-center opacity-40">
           <span className="text-xl">🐾 🌸 🐾</span>
         </div>
       </div>
