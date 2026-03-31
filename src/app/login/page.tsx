@@ -80,7 +80,7 @@ export default function LoginPage() {
               transition={{ duration: 0.5 }}
               className="text-5xl"
             >
-              {success ? "🎉" : "🐱"}
+              {success ? "🎉" : "🔐"}
             </motion.div>
 
             <div>

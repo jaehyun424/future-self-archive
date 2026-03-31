@@ -442,7 +442,47 @@ export default function PaperReaderClient({
           </div>
 
           <div className="space-y-5 relative z-10">
-            {paper.type === "goals"
+            {paper.type === "priorities" ? (
+              <div className="space-y-8">
+                {/* 미래의 나 */}
+                {paper.blocks[0] && (
+                  <div>
+                    <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">미래의 나</p>
+                    {paper.blocks[0].isPrivate ? <PrivatePlaceholder /> : renderBlockByType(paper.type, paper.blocks[0])}
+                  </div>
+                )}
+
+                {/* 3대 우선순위 */}
+                <div>
+                  <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">3대 우선순위</p>
+                  <div className="space-y-3">
+                    {paper.blocks.slice(1, 4).map((block) => (
+                      <div key={block.id}>
+                        {block.isPrivate ? <PrivatePlaceholder /> : renderBlockByType(paper.type, block)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 내려놓을 것 */}
+                {paper.blocks[4] && (
+                  <div>
+                    <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">내려놓을 것</p>
+                    {paper.blocks[4].isPrivate ? <PrivatePlaceholder /> : renderBlockByType(paper.type, paper.blocks[4])}
+                  </div>
+                )}
+
+                {/* 한 줄 결심 */}
+                {paper.blocks[5] && (
+                  <div>
+                    <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">미래의 내가 돌아온다면</p>
+                    <p className="font-serif text-lg sm:text-xl font-bold text-primary leading-relaxed">
+                      {paper.blocks[5].text}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : paper.type === "goals"
               ? paper.blocks.map((block, i) => {
                   const isPrivateBlock = block.isPrivate;
                   return (

@@ -396,10 +396,10 @@ export default function VaultReaderClient({
               damping: 25,
               stiffness: 120,
             }}
-            className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[6px] border-tertiary-container"
+            className="relative bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] p-6 sm:p-8 md:p-12 overflow-hidden border-t-[3px] border-tertiary-container"
           >
             {/* Background decoration */}
-            <div className="absolute top-4 right-6 -rotate-12 opacity-10 select-none text-8xl text-tertiary">
+            <div className="absolute top-4 right-6 -rotate-12 opacity-[0.05] select-none text-8xl text-tertiary">
               ✦
             </div>
 
@@ -416,7 +416,7 @@ export default function VaultReaderClient({
                   {/* 섹션 1: 미래의 나 (비공개) */}
                   {paper.blocks[0] && (
                     <div>
-                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">MY FUTURE SELF</p>
+                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">미래의 나</p>
                       {paper.blocks[0].isPrivate ? (
                         <PrivateHighlight>{renderBlockByType(paper.type, paper.blocks[0])}</PrivateHighlight>
                       ) : renderBlockByType(paper.type, paper.blocks[0])}
@@ -425,7 +425,7 @@ export default function VaultReaderClient({
 
                   {/* 섹션 2: 3대 우선순위 */}
                   <div>
-                    <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">TOP 3 PRIORITIES</p>
+                    <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">3대 우선순위</p>
                     <div className="space-y-3">
                       {paper.blocks.slice(1, 4).map((block) => (
                         <div key={block.id}>
@@ -440,7 +440,7 @@ export default function VaultReaderClient({
                   {/* 섹션 3: 줄일 것 (비공개) */}
                   {paper.blocks[4] && (
                     <div>
-                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">LET GO</p>
+                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">내려놓을 것</p>
                       {paper.blocks[4].isPrivate ? (
                         <PrivateHighlight>{renderBlockByType(paper.type, paper.blocks[4])}</PrivateHighlight>
                       ) : renderBlockByType(paper.type, paper.blocks[4])}
@@ -450,7 +450,7 @@ export default function VaultReaderClient({
                   {/* 섹션 4: 한 줄 결심 */}
                   {paper.blocks[5] && (
                     <div>
-                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">IF MY FUTURE SELF RETURNED</p>
+                      <p className="text-xs font-bold text-primary/50 tracking-wider mb-3">미래의 내가 돌아온다면</p>
                       <p className="font-serif text-lg sm:text-xl font-bold text-primary leading-relaxed">
                         {paper.blocks[5].text}
                       </p>
