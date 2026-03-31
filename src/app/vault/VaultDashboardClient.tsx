@@ -21,17 +21,17 @@ export default function VaultDashboardClient({
   papers: Paper[];
 }) {
   return (
-    <div className="bg-vault-texture min-h-[80vh] pb-20">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
+    <div className="bg-vault-texture min-h-[80vh] pb-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8">
         {/* Hero Intro Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 120 }}
-          className="mb-8"
+          className="mb-4"
         >
           <h1 className="font-headline font-extrabold text-2xl sm:text-3xl text-primary mb-2 leading-tight">
-            나만의 비밀 보관소 🔓
+            나만 볼 수 있는 기록들 🐾
           </h1>
           <p className="text-on-surface-variant text-sm sm:text-base font-body max-w-md">
             비공개 내용을 포함한 전체 기록
@@ -39,7 +39,7 @@ export default function VaultDashboardClient({
         </motion.div>
 
         {/* 8 Group Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {vaultGroups.map((group, index) => (
             <motion.div
               key={group.href}
@@ -56,7 +56,7 @@ export default function VaultDashboardClient({
             >
               <Link href={group.href} className="block">
                 <div
-                  className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_24px_60px_-8px_rgba(133,77,103,0.25)] will-change-transform overflow-hidden min-h-[180px] sm:min-h-[220px]"
+                  className="relative rounded-[2rem] shadow-[0_12px_40px_-4px_rgba(133,77,103,0.1)] p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_24px_60px_-8px_rgba(133,77,103,0.25)] will-change-transform overflow-hidden min-h-[150px] sm:min-h-[180px]"
                   style={{ background: group.bg }}
                 >
                   <span className="text-4xl sm:text-5xl mb-3">{group.emoji}</span>
@@ -73,7 +73,7 @@ export default function VaultDashboardClient({
         </div>
 
         {/* Bottom decoration */}
-        <div className="mt-10 mb-6 text-center opacity-40">
+        <div className="mt-4 mb-6 text-center opacity-40">
           <span className="text-xl">🐾 🌸 🐾</span>
         </div>
       </div>

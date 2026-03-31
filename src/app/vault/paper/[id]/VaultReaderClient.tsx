@@ -404,10 +404,12 @@ export default function VaultReaderClient({
             </div>
 
             {/* Mood bar */}
-            <div className="flex items-center gap-3 px-4 py-3 bg-primary-container/10 rounded-2xl mb-6">
-              <span className="text-xl">{paperEmoji[paper.id]}</span>
-              <span className="text-sm font-bold text-on-surface-variant">{typeLabelsKo[paper.type]}</span>
-              <span className="ml-auto text-xs text-primary/50 font-bold">🔓 비공개 포함</span>
+            <div className="flex items-center justify-between px-4 py-3 bg-surface-container-low/50 rounded-2xl mb-6 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{paperEmoji[paper.id]}</span>
+                <span className="font-bold text-on-surface-variant">{typeLabelsKo[paper.type]}</span>
+              </div>
+              <span className="text-[11px] text-outline font-medium">🗝️ 비공개 포함</span>
             </div>
 
             <div className="space-y-5 relative z-10">
